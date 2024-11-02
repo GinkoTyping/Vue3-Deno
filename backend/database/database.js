@@ -1,11 +1,15 @@
 import { DB } from "https://deno.land/x/sqlite/mod.ts";
 
+import DEFAULT_MEMBER from './default-data/member.js';
+import DEFAULT_LINK from './default-data/link.js';
+
 let db;
 const DEFAULT_USERNAME = 'test';
 const DEFAULT_PASSWORD = '666666';
 
 function resetTables() {
   db.execute(`DROP TABLE IF EXISTS member`);
+  db.execute(`DROP TABLE IF EXISTS link`);
 }
 
 //#region member
@@ -19,16 +23,15 @@ function createMemberTable() {
     )  
   `);
   
-  insertMember();
+  DEFAULT_MEMBER.forEach(defaultMember => {
+    insertMember(defaultMember);
+  })
 }
 
-function insertMember(memberInfo = null) {
-  const username = memberInfo?.username ?? DEFAULT_USERNAME;
-  const password = memberInfo?.password ?? DEFAULT_PASSWORD;
-
+function insertMember(memberInfo) {
   db.query(`
     INSERT INTO member VALUES(null, ?1, ?2, 0)
-  `, [username, password]);
+  `, [memberInfo.username, memberInfo.password]);
 }
 //#endregion
 
@@ -40,14 +43,21 @@ function createLinkTable() {
       userId INTEGER NOT NULL,
       title TEXT NOT NULL,
       desc TEXT NOT NULL,
+      isShow INTEGER NOT NULL,
       likes ENUM,
       dislikes ENUM
     )  
   `);
+
+  DEFAULT_LINK.forEach(defaultLink => {
+    insertLink(defaultLink);
+  })
 }
 
 function insertLink(linkInfo) {
-
+  db.query(`
+    INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, null, null)
+  `, [linkInfo.userId, linkInfo.title, linkInfo.desc, linkInfo.isShow]);
 }
 //#endregion
 
