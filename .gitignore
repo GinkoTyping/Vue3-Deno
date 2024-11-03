@@ -1,3 +1,4 @@
 *.code-workspace
 .vs
 node_modules
+*.db
