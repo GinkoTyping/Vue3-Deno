@@ -4,8 +4,6 @@ import DEFAULT_MEMBER from './default-data/member.js';
 import DEFAULT_LINK from './default-data/link.js';
 
 let db;
-const DEFAULT_USERNAME = 'test';
-const DEFAULT_PASSWORD = '666666';
 
 function resetTables() {
   db.execute(`DROP TABLE IF EXISTS member`);
@@ -44,8 +42,8 @@ function createLinkTable() {
       title TEXT NOT NULL,
       desc TEXT NOT NULL,
       isShow INTEGER NOT NULL,
-      likes ENUM,
-      dislikes ENUM
+      likes TEXT,
+      dislikes TEXT
     )  
   `);
 
@@ -56,8 +54,8 @@ function createLinkTable() {
 
 function insertLink(linkInfo) {
   db.query(`
-    INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, null, null)
-  `, [linkInfo.userId, linkInfo.title, linkInfo.desc, linkInfo.isShow]);
+    INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6)
+  `, [linkInfo.userId, linkInfo.title, linkInfo.desc, linkInfo.isShow, JSON.stringify(linkInfo.likes ?? ''), JSON.stringify(linkInfo.dislikes ?? '')]);
 }
 //#endregion
 
