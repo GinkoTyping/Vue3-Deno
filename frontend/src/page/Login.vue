@@ -2,15 +2,16 @@
 import { ref } from 'vue';
 
 import SInput from '@/components/SInput.vue';
-import { login, test } from '@/api';
+import { login } from '@/api';
 
 const form = ref({
   username: 'jasmine',
   password: '666666',
 });
 
-function submit() {
-  login(form.value);
+async function submit() {
+  const res = await login(form.value);
+  alert(res.message);
 }
 
 </script>
