@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
-    "start": "deno run --allow-read --allow-write --allow-net main.js"
+    "start": "deno run --allow-read --allow-write --allow-net server.js"
   },
   "keywords": [],
   "author": "",
