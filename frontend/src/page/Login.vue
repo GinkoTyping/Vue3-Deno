@@ -5,12 +5,12 @@ import SInput from '@/components/SInput.vue';
 import { login, test } from '@/api';
 
 const form = ref({
-  username: '',
-  password: '',
+  username: 'jasmine',
+  password: '666666',
 });
 
 function submit() {
-  test();
+  login(form.value);
 }
 
 </script>

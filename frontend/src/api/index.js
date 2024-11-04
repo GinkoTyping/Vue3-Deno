@@ -11,10 +11,6 @@ export async function login(params) {
     }),
   }
 
-  const res = await fetch(`${BASE_URL}/login`, options);
-  console.log({res});
-}
-
-export function test() {
-  return fetch(`${BASE_URL}/login`);
+  const res = await fetch(`${BASE_URL}/member/login`, options);
+  return res.json();
 }

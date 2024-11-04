@@ -1,4 +1,4 @@
-import { DB } from "https://deno.land/x/sqlite/mod.ts";
+import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 
 import DEFAULT_MEMBER from './default-data/member.js';
 import DEFAULT_LINK from './default-data/link.js';
