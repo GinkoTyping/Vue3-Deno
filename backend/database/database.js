@@ -2,6 +2,7 @@ import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 
 import DEFAULT_MEMBER from './default-data/member.js';
 import DEFAULT_LINK from './default-data/link.js';
+import { passwordHash } from "../util/index.js";
 
 let db;
 
@@ -11,7 +12,7 @@ function resetTables() {
 }
 
 //#region member
-function createMemberTable() {
+async function createMemberTable() {
   db.execute(`
     CREATE TABLE IF NOT EXISTS member (
       userId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,15 +22,15 @@ function createMemberTable() {
     )  
   `);
   
-  DEFAULT_MEMBER.forEach(defaultMember => {
-    insertMember(defaultMember);
-  })
+  const promises = DEFAULT_MEMBER.map(defaultMember => insertMember(defaultMember));
+  await Promise.all(promises);
 }
 
-function insertMember(memberInfo) {
+async function insertMember(memberInfo) {
+  const password = await passwordHash(memberInfo.password)
   db.query(`
     INSERT INTO member VALUES(null, ?1, ?2, 0)
-  `, [memberInfo.username, memberInfo.password]);
+  `, [memberInfo.username, password]);
 }
 //#endregion
 
@@ -59,11 +60,11 @@ function insertLink(linkInfo) {
 }
 //#endregion
 
-export function initDatabase() {
+export async function initDatabase() {
   db = new DB("./database/Database.db");
 
   resetTables();
-  createMemberTable();
+  await createMemberTable();
   createLinkTable();
 
   db.close();

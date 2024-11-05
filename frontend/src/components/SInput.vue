@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 
-const props = defineProps(['label', 'width']);
+const props = defineProps(['label', 'type']);
 const model = defineModel();
 const currentPlaceholder = computed(() => `Please input your ${(props.label).toLowerCase()}`);
 
@@ -10,7 +10,7 @@ const currentPlaceholder = computed(() => `Please input your ${(props.label).toL
 <template>
   <div class="input-container">
     <label for="username">{{ props?.label }}</label>
-    <input type="text" name="username" v-model="model" :placeholder="currentPlaceholder">
+    <input :type="props.type ?? 'text'" name="username" v-model="model" :placeholder="currentPlaceholder">
   </div>
 </template>
 

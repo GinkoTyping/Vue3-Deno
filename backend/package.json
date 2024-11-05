@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "deno run --allow-read --allow-write --allow-net server.js"
+    "start": "deno run --allow-read --allow-write --allow-net --allow-env --allow-ffi server.js"
   },
   "keywords": [],
   "author": "",

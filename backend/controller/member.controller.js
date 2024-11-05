@@ -1,15 +1,17 @@
 import { getLoginMember, setRegisterMember } from "../model/member.modle.js";
+import { passwordVerify } from "../util/index.js";
 
 export async function handleLogin(context) {
-  const { username, password } = await context.request.body.json();
+  const { username, password: inputPassword } = await context.request.body.json();
 
   const member = getLoginMember(username);
 
   let data;
   if (member) {
-    member.password === password 
-    ? data = { isSuccess: true, message: 'Login succeeded.' }
-    : data = { isSuccess: false, message: 'Wrong password, please check it.' };
+    const isRight = await passwordVerify(inputPassword, member.password);
+    isRight
+      ? data = { isSuccess: true, message: 'Login succeeded.' }
+      : data = { isSuccess: false, message: 'Wrong password, please check it.' };
   } else {
     data = { isSuccess: false, message: 'Wrong username, please check it.' };
   }
@@ -19,7 +21,7 @@ export async function handleLogin(context) {
 
 export async function handleRegister(context) {
   const { username, password } = await context.request.body.json();
-  const newMember = setRegisterMember({ username, password });
+  const newMember = await setRegisterMember({ username, password });
   const isSuccess = newMember !== null;
 
   context.response.status = isSuccess ? 200 : 400;

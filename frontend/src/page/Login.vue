@@ -26,8 +26,6 @@ async function submit() {
   alert(res.message);
 }
 
-// TODO register
-
 </script>
 
 <template>
@@ -37,7 +35,7 @@ async function submit() {
         <h2>{{ texts.title }}</h2>
         <div class="input-container">
           <SInput label="Username" v-model="form.username"/>
-          <SInput label="Password" v-model="form.password"/>
+          <SInput label="Password" type="password" v-model="form.password"/>
         </div>
         <button class="primary-button" @click="submit">{{ texts.title }}</button>
         <p class="switch" @click="isLogin = !isLogin">{{ texts.switch }}</p>

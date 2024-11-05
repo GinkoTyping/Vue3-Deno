@@ -1,4 +1,4 @@
-import { getDB } from "../util/index.js";
+import { getDB, passwordHash } from "../util/index.js";
 
 export function getLoginMember(username) {
   const db = getDB();
@@ -8,13 +8,14 @@ export function getLoginMember(username) {
   return member?.[0];
 }
 
-export function setRegisterMember({ username, password }) {
+export async function setRegisterMember({ username, password }) {
   const db = getDB();
   const data = db.queryEntries(`SELECT * FROM member WHERE username=?`, [username]);
   if (data?.length) {
     return null;
   } else {
-    db.query(`INSERT INTO member VALUES(null, ?1, ?2, 0)`, [username, password]);
-    return  {username , password };
+    const hashed = await passwordHash(password);
+    db.query(`INSERT INTO member VALUES(null, ?1, ?2, 0)`, [username, hashed]);
+    return  { username };
   }
 }
