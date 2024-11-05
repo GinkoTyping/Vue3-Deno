@@ -9,8 +9,22 @@ export async function login(params) {
       username: params.username,
       password: params.password,
     }),
-  }
+  };
 
   const res = await fetch(`${BASE_URL}/member/login`, options);
+  return res.json();
+}
+
+export async function register(params) {
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      username: params.username,
+      password: params.password,
+    }),
+  };
+
+  const res = await fetch(`${BASE_URL}/member/register`, options);
   return res.json();
 }

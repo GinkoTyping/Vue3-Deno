@@ -1,4 +1,4 @@
-import { getLoginMember } from "../model/member.modle.js";
+import { getLoginMember, setRegisterMember } from "../model/member.modle.js";
 
 export async function handleLogin(context) {
   const { username, password } = await context.request.body.json();
@@ -15,4 +15,17 @@ export async function handleLogin(context) {
   }
 
   context.response.body = data;
+}
+
+export async function handleRegister(context) {
+  const { username, password } = await context.request.body.json();
+  const newMember = setRegisterMember({ username, password });
+  const isSuccess = newMember !== null;
+
+  context.response.status = isSuccess ? 200 : 400;
+  context.response.body = {
+    isSuccess,
+    member: newMember,
+    message: isSuccess ? 'Register succeeded.' : `Register failed. Username "${username}" is used already.`,
+  };
 }

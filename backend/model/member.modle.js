@@ -1,10 +1,20 @@
-import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
-import path from 'node:path';
+import { getDB } from "../util/index.js";
 
 export function getLoginMember(username) {
-  const db = new DB(path.resolve(import.meta.dirname, '../database/Database.db'));
+  const db = getDB();
   const member = db.queryEntries(`SELECT * FROM member WHERE username=?`, [username]);
   db.close();
 
   return member?.[0];
+}
+
+export function setRegisterMember({ username, password }) {
+  const db = getDB();
+  const data = db.queryEntries(`SELECT * FROM member WHERE username=?`, [username]);
+  if (data?.length) {
+    return null;
+  } else {
+    db.query(`INSERT INTO member VALUES(null, ?1, ?2, 0)`, [username, password]);
+    return  {username , password };
+  }
 }

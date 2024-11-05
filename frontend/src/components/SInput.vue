@@ -10,7 +10,7 @@ const currentPlaceholder = computed(() => `Please input your ${(props.label).toL
 <template>
   <div class="input-container">
     <label for="username">{{ props?.label }}</label>
-    <input type="text" name="username" :value="model" :placeholder="currentPlaceholder">
+    <input type="text" name="username" v-model="model" :placeholder="currentPlaceholder">
   </div>
 </template>
 

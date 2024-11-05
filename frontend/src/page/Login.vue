@@ -1,18 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import SInput from '@/components/SInput.vue';
-import { login } from '@/api';
+import { login, register } from '@/api';
 
 const form = ref({
   username: 'jasmine',
   password: '666666',
 });
+const isLogin = ref(true);
+const texts = computed(() => {
+  return isLogin.value 
+    ? { title: 'Log In', switch:  "New here? Register Now"} 
+    : { title: 'Register', switch:  "Member already? Login Now"} 
+})
 
 async function submit() {
-  const res = await login(form.value);
+  let res;
+  if (isLogin.value) {
+    res = await login(form.value);
+  } else {
+    res = await register(form.value);
+  }
+
   alert(res.message);
 }
+
+// TODO register
 
 </script>
 
@@ -20,13 +34,13 @@ async function submit() {
   <div class="container">
     <div class="login-container">
       <div class="login-container-wrap">
-        <h2>Log In</h2>
+        <h2>{{ texts.title }}</h2>
         <div class="input-container">
           <SInput label="Username" v-model="form.username"/>
           <SInput label="Password" v-model="form.password"/>
         </div>
-        <button class="primary-button" @click="submit">Log In</button>
-        <p class="switch">New here? Register Now</p>
+        <button class="primary-button" @click="submit">{{ texts.title }}</button>
+        <p class="switch" @click="isLogin = !isLogin">{{ texts.switch }}</p>
       </div>
     </div>
     <div class="img-container">

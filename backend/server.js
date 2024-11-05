@@ -15,6 +15,10 @@ setMemberRoutes(router);
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+app.addEventListener("error", (evt) => {
+  console.log(evt.error);
+});
+
 app.addEventListener("listen", ({ hostname, port, secure }) => {
   console.log(
     `Listening on: ${secure ? "https://" : "http://"}${
