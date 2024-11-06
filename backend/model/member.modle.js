@@ -12,10 +12,12 @@ export async function setRegisterMember({ username, password }) {
   const db = getDB();
   const data = db.queryEntries(`SELECT * FROM member WHERE username=?`, [username]);
   if (data?.length) {
+    db.close();
     return null;
   } else {
     const hashed = await passwordHash(password);
     db.query(`INSERT INTO member VALUES(null, ?1, ?2, 0)`, [username, hashed]);
+    db.close();
     return  { username };
   }
 }

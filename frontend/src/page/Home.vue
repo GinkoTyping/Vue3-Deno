@@ -1,5 +1,14 @@
 <script setup>
+import { ref } from 'vue';
+
 import LinkCard from '@/components/LinkCard.vue';
+
+const userId = ref(-1);
+
+const storedUserId = sessionStorage.getItem('userId');
+if (storedUserId) {
+  userId.value = Number(storedUserId);
+};
 
 </script>
 

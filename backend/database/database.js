@@ -1,8 +1,9 @@
 import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 
-import DEFAULT_MEMBER from './default-data/member.js';
-import DEFAULT_LINK from './default-data/link.js';
+import DEFAULT_MEMBER from "./default-data/member.js";
+import DEFAULT_LINK from "./default-data/link.js";
 import { passwordHash } from "../util/index.js";
+import { insertLink, updateLinkRatings } from "../model/link.modle.js";
 
 let db;
 
@@ -21,16 +22,21 @@ async function createMemberTable() {
       points INTEGER
     )  
   `);
-  
-  const promises = DEFAULT_MEMBER.map(defaultMember => insertMember(defaultMember));
+
+  const promises = DEFAULT_MEMBER.map((defaultMember) =>
+    insertMember(defaultMember)
+  );
   await Promise.all(promises);
 }
 
 async function insertMember(memberInfo) {
-  const password = await passwordHash(memberInfo.password)
-  db.query(`
+  const password = await passwordHash(memberInfo.password);
+  db.query(
+    `
     INSERT INTO member VALUES(null, ?1, ?2, 0)
-  `, [memberInfo.username, password]);
+  `,
+    [memberInfo.username, password]
+  );
 }
 //#endregion
 
@@ -44,20 +50,17 @@ function createLinkTable() {
       desc TEXT NOT NULL,
       isShow INTEGER NOT NULL,
       likes TEXT,
-      dislikes TEXT
+      dislikes TEXT,
+      rating INTEGER NOT NULL
     )  
   `);
 
-  DEFAULT_LINK.forEach(defaultLink => {
+  DEFAULT_LINK.forEach((defaultLink) => {
     insertLink(defaultLink);
-  })
+  });
+  updateLinkRatings();
 }
 
-function insertLink(linkInfo) {
-  db.query(`
-    INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6)
-  `, [linkInfo.userId, linkInfo.title, linkInfo.desc, linkInfo.isShow, JSON.stringify(linkInfo.likes ?? ''), JSON.stringify(linkInfo.dislikes ?? '')]);
-}
 //#endregion
 
 export async function initDatabase() {
