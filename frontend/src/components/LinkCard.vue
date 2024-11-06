@@ -27,9 +27,18 @@ const colorSettings = computed(() => {
     </div>
     <div class="colunm colunm-3">
       <p>Auther Name</p>
-      <p style="color: rgb(136, 136, 136)">Auther Name</p>
+      <p style="color: rgb(136, 136, 136)">2024-03-11</p>
     </div>
-    <div class="colunm colunm-4"></div>
+    <div class="colunm colunm-4">
+      <div class="icon-container">
+        <img src="@/assets/like.png" alt="">
+        <span>22</span>
+      </div>
+      <div class="icon-container">
+        <img src="@/assets/dislike.png" alt="">
+        <span>22</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -88,5 +97,21 @@ const colorSettings = computed(() => {
 
 .colunm-4 {
   border-right: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.colunm-4 img {
+  width: 22px;
+  margin: 0 2px;
+  cursor: pointer;
+}
+.colunm-4 .icon-container {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-family: Arial Black, Helvetica, sans-serif;
+  color: rgb(136, 136, 136);
+  margin: 0 4px;
 }
 </style>
