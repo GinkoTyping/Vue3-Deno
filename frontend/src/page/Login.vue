@@ -68,7 +68,7 @@ async function submit() {
 }
 .img-container {
   width: 50%;
-  background-color: rgb(183, 225, 221);
+  background-color: var(--primary-color);
   display: flex;
   justify-content: center;
   align-items: center;
