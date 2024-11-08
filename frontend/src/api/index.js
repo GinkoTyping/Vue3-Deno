@@ -28,3 +28,13 @@ export async function register(params) {
   const res = await fetch(`${BASE_URL}/member/register`, options);
   return res.json();
 }
+
+export async function getAllLink(params) {
+  const res = await fetch("/link/all");
+  return res.json();
+}
+
+export async function getAllLink(params) {
+  const res = await fetch("/link/all");
+  return res.json();
+}
