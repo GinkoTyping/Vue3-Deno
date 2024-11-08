@@ -2,18 +2,24 @@ import { getDB, getAverageScore } from "../util/index.js";
 
 export function insertLink(linkInfo, close = false) {
   const db = getDB();
-  db.query(`INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6, 0)`, [
+  db.query(`INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6, 0, ?7)`, [
     linkInfo.userId,
     linkInfo.title,
     linkInfo.desc,
     linkInfo.isShow,
     JSON.stringify(linkInfo.likes ?? ""),
     JSON.stringify(linkInfo.dislikes ?? ""),
+    Date.now(),
   ]);
 
   if (close) {
     db.close();
   }
+}
+
+export function getAllLink() {
+  const db = getDB();
+  return db.queryEntry(`SELECT * FROM link`);
 }
 
 export function updateLinkRatings() {

@@ -51,8 +51,9 @@ function createLinkTable() {
       isShow INTEGER NOT NULL,
       likes TEXT,
       dislikes TEXT,
-      rating INTEGER NOT NULL
-    )  
+      rating INTEGER NOT NULL,
+      ceatedAt INTEGER NOT NULL
+    )
   `);
 
   DEFAULT_LINK.forEach((defaultLink) => {
