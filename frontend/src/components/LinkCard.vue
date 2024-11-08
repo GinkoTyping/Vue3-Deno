@@ -37,7 +37,7 @@ watch(
       <a href="">{{ row.desc }}</a> 
     </div>
     <div class="colunm colunm-3">
-      <p>Auther Name</p>
+      <p>{{ row.userName }}</p>
       <p style="color: rgb(136, 136, 136)">{{ row.createdAt }}</p>
     </div>
     <div class="colunm colunm-4">

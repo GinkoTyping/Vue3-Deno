@@ -1,22 +1,50 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 import LinkCard from '@/components/LinkCard.vue';
 import { getAllLink, getFavorite } from '@/api';
 
-const userId = ref(-1);
+const router = useRouter();
+const userId = ref(sessionStorage.getItem('userId'));
+const username = ref(sessionStorage.getItem('username'));
+
 const allLinks = ref([]);
 const favoriteLinks = ref([]);
 const isShowFavorite = ref(false);
-const storedUserId = sessionStorage.getItem('userId');
-if (storedUserId) {
-  userId.value = Number(storedUserId);
-};
+
 const currentList = computed(() => isShowFavorite.value ? favoriteLinks.value : allLinks.value);
 
 onMounted(async () => {
   allLinks.value = await getAllLink();
+  if (userId.value) {
+    favoriteLinks.value = await getFavorite(userId.value);
+  }
 });
+
+function onClickUsernameOrLogin() {
+  if (!username.value) {
+    backToLogin(false);
+  }
+}
+
+function backToLogin(needComfirm = false) {
+  if (needComfirm) {
+    if (confirm('Are you sure to log out?')) {
+      router.push('/');
+    }
+  } else {
+    router.push('/');
+  }
+}
+
+function onSwitchList(goFavorite) {
+  if (goFavorite === isShowFavorite.value) {
+    return;
+  }
+
+  isShowFavorite.value = !isShowFavorite.value;
+}
 
 </script>
 
@@ -25,12 +53,12 @@ onMounted(async () => {
     <header>
       <div class="left">
         <img src="@/assets/logo.png" alt="">
-        <div :class="[isShowFavorite ? '' : 'active']">All Links</div>
-        <div :class="[isShowFavorite ? 'active' : '']">My Favorite</div>
+        <div @click="() => onSwitchList(false)" :class="[isShowFavorite ? '' : 'active']">All Links</div>
+        <div @click="() => onSwitchList(true)" :class="[isShowFavorite ? 'active' : '']" v-show="username">My Favorite</div>
       </div>
       <div class="right">
-        <div class="user">David</div>
-        <div class="action">Log Out</div>
+        <div class="user" @click="onClickUsernameOrLogin">{{ username ? username : 'Login' }}</div>
+        <div class="action" @click="() => backToLogin(true)" v-show="username">Log Out</div>
       </div>
     </header>
     <div class="link-container">

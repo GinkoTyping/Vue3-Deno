@@ -10,7 +10,7 @@ export async function handleLogin(context) {
   if (member) {
     const isRight = await passwordVerify(inputPassword, member.password);
     isRight
-      ? data = { isSuccess: true, message: 'Login succeeded.' }
+      ? data = { isSuccess: true, message: 'Login succeeded.', username: member.username, userId: member.userId }
       : data = { isSuccess: false, message: 'Wrong password, please check it.' };
   } else {
     data = { isSuccess: false, message: 'Wrong username, please check it.' };

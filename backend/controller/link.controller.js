@@ -16,11 +16,11 @@ export function queryAllLinks(context) {
   context.response.body = mapLinksToFrontend(getAllLink());
 }
 
-export function queryFavoriteLinks(context, params) {
-  if (isNaN(params.userId)) {
+export function queryFavoriteLinks(context) {
+  if (isNaN(context.params?.userId)) {
     throw new Error()
   } else {
-    const userId = Number(params.userId);
+    const userId = Number(context.params.userId);
     const links = getAllLink();
     const output = links.filter(link => {
       const likes = JSON.parse(link.likes);

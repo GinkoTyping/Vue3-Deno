@@ -6,5 +6,5 @@ export default function (router) {
   router.post('/member/register', handleRegister);
 
   router.get('/link/all', queryAllLinks);
-  router.get('/link/favorite', queryFavoriteLinks);
+  router.get('/link/favorite/:userId', queryFavoriteLinks);
 };

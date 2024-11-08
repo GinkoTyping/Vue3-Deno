@@ -22,8 +22,8 @@ export default [
     userName: 'jasmine',
     title: 'tilte text',
     desc: 'link desc...',
-    likes: [3, 1],
-    dislikes: [2],
+    likes: [3],
+    dislikes: [2, 1],
     isShow: 1,
   },
   {
@@ -31,8 +31,8 @@ export default [
     userName: 'jack',
     title: 'tilte text',
     desc: 'link desc...',
-    likes: [3, 1],
-    dislikes: [2],
+    likes: [3],
+    dislikes: [2,1],
     isShow: 0,
   },
 ]

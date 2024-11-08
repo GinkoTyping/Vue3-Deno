@@ -34,7 +34,7 @@ export async function getAllLink(params) {
   return res.json();
 }
 
-export async function getFavorite(params) {
-  const res = await fetch(`${BASE_URL}/link/favorite`);
+export async function getFavorite(userId) {
+  const res = await fetch(`${BASE_URL}/link/favorite/${userId}`);
   return res.json();
 }

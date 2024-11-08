@@ -1,24 +1,31 @@
 <script setup>
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import SInput from '@/components/SInput.vue';
 import { login, register } from '@/api';
 
+const router = useRouter();
 const form = ref({
   username: 'jasmine',
   password: '666666',
 });
 const isLogin = ref(true);
 const texts = computed(() => {
-  return isLogin.value 
-    ? { title: 'Log In', switch:  "New here? Register Now"} 
-    : { title: 'Register', switch:  "Member already? Login Now"} 
-})
+  return isLogin.value
+    ? { title: 'Log In', switch: "New here? Register Now" }
+    : { title: 'Register', switch: "Member already? Login Now" }
+});
 
 async function submit() {
   let res;
   if (isLogin.value) {
     res = await login(form.value);
+    if (res.isSuccess) {
+      sessionStorage.setItem('userId', res.userId);
+      sessionStorage.setItem('username', res.username);
+      router.push('/home');
+    }
   } else {
     res = await register(form.value);
   }
@@ -34,8 +41,8 @@ async function submit() {
       <div class="login-container-wrap">
         <h2>{{ texts.title }}</h2>
         <div class="input-container">
-          <SInput label="Username" v-model="form.username"/>
-          <SInput label="Password" type="password" v-model="form.password"/>
+          <SInput label="Username" v-model="form.username" />
+          <SInput label="Password" type="password" v-model="form.password" />
         </div>
         <button class="primary-button" @click="submit">{{ texts.title }}</button>
         <p class="switch" @click="isLogin = !isLogin">{{ texts.switch }}</p>
@@ -53,7 +60,9 @@ async function submit() {
   justify-content: space-between;
   width: 100%;
   height: 100%;
+  background-color: #fff;
 }
+
 .login-container {
   width: 50%;
   max-width: 500px;
@@ -63,9 +72,11 @@ async function submit() {
   display: flex;
   align-items: center;
 }
+
 .login-container-wrap {
   width: 100%;
 }
+
 .img-container {
   width: 50%;
   background-color: var(--primary-color);
@@ -73,6 +84,7 @@ async function submit() {
   justify-content: center;
   align-items: center;
 }
+
 .img-container .logo {
   height: 400px;
   width: 80%;
@@ -81,13 +93,14 @@ async function submit() {
   background-position: center;
   background-image: url('@/assets/logo.png');
 }
+
 .switch {
   text-align: right;
   font-size: 14px;
   cursor: pointer;
 }
+
 .switch:hover {
   color: #00000069;
 }
 </style>
-
