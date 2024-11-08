@@ -37,7 +37,7 @@ watch(
       <a href="">{{ row.desc }}</a> 
     </div>
     <div class="colunm colunm-3">
-      <p style="color: black">Auther Name</p>
+      <p>Auther Name</p>
       <p style="color: rgb(136, 136, 136)">{{ row.createdAt }}</p>
     </div>
     <div class="colunm colunm-4">
@@ -64,6 +64,15 @@ watch(
   display: flex;
   justify-content: space-between;
 }
+.card-container:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.card-container:last-child {
+  border-bottom: 2px solid white !important;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
 .colunm {
   height: 100%;
   box-sizing: border-box;
@@ -86,10 +95,14 @@ watch(
   text-align: left;
 }
 .colunm-2 a {
-  color: rgb(26, 57, 89);
+  color: var(--primary-text-color);
 }
 .colunm-2 a:hover {
   text-decoration: underline;
+}
+
+.colunm-3 {
+  color: var(--primary-text-color);
 }
 
 .colunm-4,.colunm-3 {
