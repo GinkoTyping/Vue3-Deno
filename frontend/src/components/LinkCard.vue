@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 
 const props = defineProps(['theme', 'data']);
+const currentUserId = ref(Number(sessionStorage.getItem('userId')));
 
 const colorSettings = computed(() => {
   return props.theme === 'light' 
@@ -15,6 +16,9 @@ const colorSettings = computed(() => {
     }
 });
 
+const isLiked = computed(() => row.value.likes.includes(currentUserId.value));
+const isDisliked = computed(() => row.value.dislikes.includes(currentUserId.value));
+
 const row = ref({});
 watch(
   () => props.data,
@@ -26,7 +30,6 @@ watch(
     immediate: true,
   }
 );
-
 
 </script>
 
@@ -42,11 +45,13 @@ watch(
     </div>
     <div class="colunm colunm-4">
       <div class="icon-container">
-        <img src="@/assets/like.png" alt="">
+        <img v-if="isLiked" src="@/assets/like-fill.png" alt="">
+        <img v-else src="@/assets/like.png" alt="">
         <span>{{ row.likesCount }}</span>
       </div>
       <div class="icon-container">
-        <img src="@/assets/dislike.png" alt="">
+        <img v-if="isDisliked" src="@/assets/dislike_fill.png" alt="">
+        <img v-else src="@/assets/dislike.png" alt="">
         <span>{{ row.dislikesCount }}</span>
       </div>
     </div>

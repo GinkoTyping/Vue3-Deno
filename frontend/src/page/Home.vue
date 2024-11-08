@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import LinkCard from '@/components/LinkCard.vue';
 import { getAllLink, getFavorite } from '@/api';
-
+// TODO Implement user point
 const router = useRouter();
 const userId = ref(sessionStorage.getItem('userId'));
 const username = ref(sessionStorage.getItem('username'));
