@@ -19,7 +19,7 @@ export function insertLink(linkInfo, close = false) {
 
 export function getAllLink() {
   const db = getDB();
-  return db.queryEntry(`SELECT * FROM link`);
+  return db.queryEntries(`SELECT * FROM link`);
 }
 
 export function updateLinkRatings() {

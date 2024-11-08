@@ -1,8 +1,7 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
-const props = defineProps(['theme']);
-
+const props = defineProps(['theme', 'data']);
 
 const colorSettings = computed(() => {
   return props.theme === 'light' 
@@ -16,27 +15,39 @@ const colorSettings = computed(() => {
     }
 });
 
+const row = ref({});
+watch(
+  () => props.data,
+  (val) => {
+    row.value = val;
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
+
 
 </script>
 
 <template>
   <div class="card-container" :style="colorSettings.primary">
-    <div class="colunm colunm-1">22</div>
+    <div class="colunm colunm-1">{{ row.rating }}</div>
     <div class="colunm colunm-2"> 
-      <a href="">2024《地心之战》第1赛季 史诗钥石地下城全球锦标赛 国服赛区角色11月8日开战！</a> 
+      <a href="">{{ row.desc }}</a> 
     </div>
     <div class="colunm colunm-3">
-      <p>Auther Name</p>
-      <p style="color: rgb(136, 136, 136)">2024-03-11</p>
+      <p style="color: black">Auther Name</p>
+      <p style="color: rgb(136, 136, 136)">{{ row.createdAt }}</p>
     </div>
     <div class="colunm colunm-4">
       <div class="icon-container">
         <img src="@/assets/like.png" alt="">
-        <span>22</span>
+        <span>{{ row.likesCount }}</span>
       </div>
       <div class="icon-container">
         <img src="@/assets/dislike.png" alt="">
-        <span>22</span>
+        <span>{{ row.dislikesCount }}</span>
       </div>
     </div>
   </div>

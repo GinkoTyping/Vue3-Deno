@@ -52,7 +52,7 @@ function createLinkTable() {
       likes TEXT,
       dislikes TEXT,
       rating INTEGER NOT NULL,
-      ceatedAt INTEGER NOT NULL
+      createdAt INTEGER NOT NULL
     )
   `);
 

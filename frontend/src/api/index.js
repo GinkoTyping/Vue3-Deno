@@ -30,11 +30,11 @@ export async function register(params) {
 }
 
 export async function getAllLink(params) {
-  const res = await fetch("/link/all");
+  const res = await fetch(`${BASE_URL}/link/all`);
   return res.json();
 }
 
-export async function getAllLink(params) {
-  const res = await fetch("/link/all");
+export async function getFavorite(params) {
+  const res = await fetch(`${BASE_URL}/link/favorite`);
   return res.json();
 }
