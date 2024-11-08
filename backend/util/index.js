@@ -21,11 +21,8 @@ export function passwordVerify(text, hash) {
 
 //#region Average
 const LIKE_CORE = 100;
-const MODIFIER = 1;
+const MODIFIER = .7;
 export function getAverageScore({ avgNumOfRatingsForAll, avgRatingForAll, totalRating, rateCount }) {
-  console.log(avgNumOfRatingsForAll, avgRatingForAll, totalRating, rateCount);
-  console.log( ((avgNumOfRatingsForAll * avgRatingForAll * LIKE_CORE * MODIFIER) + totalRating * LIKE_CORE), (rateCount + (avgNumOfRatingsForAll * MODIFIER)));
-  console.log('-----------------------');
   return ((avgNumOfRatingsForAll * avgRatingForAll * LIKE_CORE * MODIFIER) + totalRating * LIKE_CORE) / (rateCount + (avgNumOfRatingsForAll * MODIFIER));
 }
 //#endregion
