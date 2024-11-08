@@ -2,8 +2,9 @@ import { getDB, getAverageScore } from "../util/index.js";
 
 export function insertLink(linkInfo, close = false) {
   const db = getDB();
-  db.query(`INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6, 0, ?7)`, [
+  db.query(`INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6, ?7, 0, ?8)`, [
     linkInfo.userId,
+    linkInfo.userName,
     linkInfo.title,
     linkInfo.desc,
     linkInfo.isShow,

@@ -46,6 +46,7 @@ function createLinkTable() {
     CREATE TABLE IF NOT EXISTS link (
       linkId INTEGER PRIMARY KEY AUTOINCREMENT,
       userId INTEGER NOT NULL,
+      userName TEXT NOT NULL,
       title TEXT NOT NULL,
       desc TEXT NOT NULL,
       isShow INTEGER NOT NULL,
