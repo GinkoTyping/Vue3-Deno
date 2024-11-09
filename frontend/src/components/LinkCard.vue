@@ -53,6 +53,8 @@ async function switchLike(isLike) {
     userId: currentUserId.value,
     linkId: row.value.linkId,
     likeStatus: status,
+    previousStatus: likeStatus.value,
+    linkUserId: row.value.userId,
   });
   if (isSuccess) {
     emits('onSwitchLike');

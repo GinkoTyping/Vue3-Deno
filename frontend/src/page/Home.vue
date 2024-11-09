@@ -77,7 +77,7 @@ function handleSwitchLike() {
         <div @click="() => onSwitchList(true)" :class="[isShowFavorite ? 'active' : '']" v-show="username">My Favorite</div>
       </div>
       <div class="right">
-        <div class="user" @click="onClickUsernameOrLogin">
+        <div class="user" @click="onClickUsernameOrLogin" :title="`Total Points: ${points}`">
           {{ username ? `${username} (${points})` : 'Login' }}
         </div>
         <div class="action" @click="() => backToLogin(true)" v-show="username">Log Out</div>

@@ -31,7 +31,7 @@ export async function setRegisterMember({ username, password }) {
   }
 }
 
-export function setMemberPoint(params) {
+export function updateMemberPoint(params) {
   const { userId, totalPoints, changedPoints } = params;
 
   const db = getDB();

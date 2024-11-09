@@ -4,7 +4,7 @@ import DEFAULT_MEMBER from "./default-data/member.js";
 import DEFAULT_LINK from "./default-data/link.js";
 import { getDB, passwordHash } from "../util/index.js";
 import { getAllLink, insertLink, updateLinkRatings } from "../model/link.modle.js";
-import { setMemberPoint } from "../model/member.modle.js";
+import { updateMemberPoint } from "../model/member.modle.js";
 
 let db;
 
@@ -61,7 +61,7 @@ function initMembersPoints() {
     return pre;
   }, {});
   Object.entries(pointsByMember).forEach(([key,value]) => {
-    setMemberPoint({
+    updateMemberPoint({
       userId: Number(key),
       totalPoints: value,
     });

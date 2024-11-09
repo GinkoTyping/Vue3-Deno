@@ -1,4 +1,5 @@
 import { getAllLink, getLinkById, updateLinkLike } from "../model/link.modle.js";
+import { updateMemberPoint } from "../model/member.modle.js";
 import { formatDate } from "../util/index.js";
 
 export function mapLinksToFrontend(links) {
@@ -31,11 +32,18 @@ export function queryFavoriteLinks(context) {
 }
 
 export async function handleUpdateLinkLike(context) {
-  const { likeStatus, linkId, userId } = await context.request.body.json();
-  const link = getLinkById(linkId);
-
-  if (!link) {
+  const { previousStatus, likeStatus, linkId, userId, linkUserId } = await context.request.body.json();
+  if (previousStatus === likeStatus) {
     context.response.status = 400;
+    context.response.body = {
+      messgae: 'Nothing to change.'
+    };
+    return;
+  }
+
+  const link = getLinkById(linkId);
+  if (!link) {
+    context.response.status = 401;
     context.response.body = {
       messgae: 'Invalid linkId.'
     };
@@ -43,6 +51,7 @@ export async function handleUpdateLinkLike(context) {
   }
 
   updateLinkLike({ link, linkId, likeStatus, userId });
+  handleUpdateMemberPoints(previousStatus, likeStatus, linkUserId);
 
   context.response.body = {
     messgae: 'Update succeeded.',
@@ -50,3 +59,18 @@ export async function handleUpdateLinkLike(context) {
   };
 }
 
+function handleUpdateMemberPoints(previousStatus, newStatus, userId) {
+  
+  let changedPoints;
+  if (previousStatus === 0) {
+    changedPoints = newStatus === 1 ? 2 : 0;
+  } else if (previousStatus === 1) {
+    changedPoints = newStatus === 0 ? -2 : 0;
+  } else {
+    changedPoints = newStatus === 0 ? 1 : -1;
+  }
+  updateMemberPoint({
+    userId,
+    changedPoints,
+  });
+}
