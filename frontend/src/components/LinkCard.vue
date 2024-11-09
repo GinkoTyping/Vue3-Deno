@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { updateLinkLike } from '../api';
 
-const props = defineProps(['theme', 'data']);
+const props = defineProps(['theme', 'data', 'visibility']);
 const emits = defineEmits(['onSwitchLike']);
 const currentUserId = ref(Number(sessionStorage.getItem('userId')));
 
@@ -61,13 +61,17 @@ async function switchLike(isLike) {
   }
 }
 
+function switchVisible(isVisible) {
+  
+}
+
 </script>
 
 <template>
   <div class="card-container" :style="colorSettings.primary">
     <div class="colunm colunm-1">{{ row.rating }}</div>
     <div class="colunm colunm-2"> 
-      <a href="">{{ row.desc }}</a> 
+      <a class="ellipsis-multiline" :title="row.desc"><b style="color: rgb(136, 136, 136)">[{{ row.title }}] </b>{{ row.desc }}</a> 
     </div>
     <div class="colunm colunm-3">
       <p>{{ row.userName }}</p>
@@ -76,23 +80,36 @@ async function switchLike(isLike) {
     <div class="colunm colunm-4">
       <div 
         class="icon-container" 
+        v-show="!props.visibility"
         @click="() => switchLike(true)">
-        <img v-if="likeStatus === 1" src="@/assets/like-fill.png" alt="">
-        <img v-else src="@/assets/like.png" alt="">
+        <img title="Undo like" v-if="likeStatus === 1" src="@/assets/like-fill.png" alt="">
+        <img title="like" v-else src="@/assets/like.png" alt="">
         <span>{{ row.likesCount }}</span>
       </div>
       <div 
-        class="icon-container" 
+        class="icon-container"
+        v-show="!props.visibility"
         @click="() => switchLike(false)">
-        <img v-if="likeStatus === 0" src="@/assets/dislike_fill.png" alt="">
-        <img v-else src="@/assets/dislike.png" alt="">
+        <img title="Undo dilike" v-if="likeStatus === 0" src="@/assets/dislike_fill.png" alt="">
+        <img title="dilike" v-else src="@/assets/dislike.png" alt="">
         <span>{{ row.dislikesCount }}</span>
+      </div>
+      <div class="icon-container" v-show="props.visibility">
+        <img title="hide" v-if="row.isShow === 1" @click="() => switchVisible(false)" src="@/assets/show.png" alt="">
+        <img title="show" v-else @click="() => switchVisible(true)" src="@/assets/hide.png" alt="">
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.ellipsis-multiline {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}
 .card-container {
   box-sizing: border-box;
   border: 2px solid white;
@@ -134,6 +151,7 @@ async function switchLike(isLike) {
   text-align: left;
 }
 .colunm-2 a {
+  cursor: pointer;
   color: var(--primary-text-color);
 }
 .colunm-2 a:hover {

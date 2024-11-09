@@ -6,15 +6,22 @@ import LinkCard from '@/components/LinkCard.vue';
 import { getAllLink, getFavorite, getMemberInfo } from '@/api';
 
 const router = useRouter();
-const userId = ref(sessionStorage.getItem('userId'));
+const userId = ref(Number(sessionStorage.getItem('userId')));
 const username = ref(sessionStorage.getItem('username'));
 const points = ref(sessionStorage.getItem('points'));
 
 const allLinks = ref([]);
 const favoriteLinks = ref([]);
-const isShowFavorite = ref(false);
+const tabIndex = ref(0);
 
-const currentList = computed(() => isShowFavorite.value ? favoriteLinks.value : allLinks.value);
+const currentList = computed(() => {
+  if (tabIndex.value === 0) {
+    return allLinks.value;
+  } else if (tabIndex.value === 1) {
+    return allLinks.value.filter(link => link.userId === userId.value);
+  }
+  return favoriteLinks.value;
+});
 
 onMounted(() => {
   init();
@@ -45,12 +52,12 @@ function backToLogin(needComfirm = false) {
   }
 }
 
-function onSwitchList(goFavorite) {
-  if (goFavorite === isShowFavorite.value) {
+function onSwitchList(index) {
+  if (tabIndex.value === index) {
     return;
   }
 
-  isShowFavorite.value = !isShowFavorite.value;
+  tabIndex.value = index;
 }
 
 async function updatePoints() {
@@ -73,8 +80,15 @@ function handleSwitchLike() {
     <header>
       <div class="left">
         <img src="@/assets/logo.png" alt="">
-        <div @click="() => onSwitchList(false)" :class="[isShowFavorite ? '' : 'active']">All Links</div>
-        <div @click="() => onSwitchList(true)" :class="[isShowFavorite ? 'active' : '']" v-show="username">My Favorite</div>
+        <div @click="() => onSwitchList(0)" :class="[tabIndex === 0 ? 'active' : '']">
+          All Links
+        </div>
+        <div @click="() => onSwitchList(1)" :class="[tabIndex === 1 ? 'active' : '']" v-show="username">
+          My Links
+        </div>
+        <div @click="() => onSwitchList(2)" :class="[tabIndex === 2 ? 'active' : '']" v-show="username">
+          My Favorite
+        </div>
       </div>
       <div class="right">
         <div class="user" @click="onClickUsernameOrLogin" :title="`Total Points: ${points}`">
@@ -84,13 +98,8 @@ function handleSwitchLike() {
       </div>
     </header>
     <div class="link-container">
-      <link-card
-        v-for="(link, index) in currentList" 
-        :key="link.linkId" 
-        :theme="index % 2 === 0 ? 'light' : 'dark'"
-        :data="link"
-        @on-switch-like="handleSwitchLike"
-      />
+      <link-card v-for="(link, index) in currentList" :key="link.linkId" :theme="index % 2 === 0 ? 'light' : 'dark'"
+        :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1"/>
     </div>
   </div>
 </template>
@@ -100,9 +109,11 @@ function handleSwitchLike() {
   background-color: rgb(245, 232, 203);
   height: 100%;
 }
+
 .link-container {
   padding: 12px;
 }
+
 header {
   display: flex;
   justify-content: space-between;
@@ -116,15 +127,19 @@ header img {
   padding-left: 6px;
 }
 
-.right,.left {
+.right,
+.left {
   display: flex;
   align-items: center;
 }
+
 .active {
   background-color: rgb(89, 24, 4);
   color: #fff;
 }
-.right div,.left div {
+
+.right div,
+.left div {
   line-height: 55px;
   box-sizing: border-box;
   width: 102px;
@@ -136,8 +151,8 @@ header img {
   background-color: rgb(89, 24, 4);
   color: #fff;
 }
+
 .right .action {
   background-color: rgb(255, 240, 205);
 }
-
 </style>
