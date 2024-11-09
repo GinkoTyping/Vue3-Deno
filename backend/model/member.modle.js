@@ -8,6 +8,15 @@ export function getLoginMember(username) {
   return member?.[0];
 }
 
+export function getMemberById(userId) {
+  const db = getDB();
+  const member = db.queryEntries(
+    'SELECT * FROM member WHERE userId=?',
+    [userId]
+  );
+  return member?.[0];
+}
+
 export async function setRegisterMember({ username, password }) {
   const db = getDB();
   const data = db.queryEntries(`SELECT * FROM member WHERE username=?`, [username]);
@@ -20,4 +29,25 @@ export async function setRegisterMember({ username, password }) {
     db.close();
     return  { username };
   }
+}
+
+export function setMemberPoint(params) {
+  const { userId, totalPoints, changedPoints } = params;
+
+  const db = getDB();
+
+  let finalPoints;
+  if (totalPoints) {
+    finalPoints = totalPoints;
+  } else if (changedPoints) {
+    const user = db.queryEntries('SELECT points FROM member WHERE userId=?1', [userId])?.[0];
+    finalPoints = user.points + changedPoints;
+  }
+
+  db.query(
+    'UPDATE member SET points=?1 WHERE userId=?2',
+    [finalPoints, userId]
+  );
+
+  db.close();
 }

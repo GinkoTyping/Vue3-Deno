@@ -3,7 +3,8 @@ import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 import DEFAULT_MEMBER from "./default-data/member.js";
 import DEFAULT_LINK from "./default-data/link.js";
 import { getDB, passwordHash } from "../util/index.js";
-import { insertLink, updateLinkRatings } from "../model/link.modle.js";
+import { getAllLink, insertLink, updateLinkRatings } from "../model/link.modle.js";
+import { setMemberPoint } from "../model/member.modle.js";
 
 let db;
 
@@ -37,6 +38,34 @@ async function insertMember(memberInfo) {
   `,
     [memberInfo.username, password]
   );
+}
+
+function initMembersPoints() {
+  const links = getAllLink();
+  const pointsByMember = links.reduce((pre, cur) => {
+    JSON.parse(cur.likes).forEach(userId => {
+      if (pre[userId]) {
+        pre[userId] += 1;
+      } else {
+        pre[userId] = 1;
+      }
+    });
+
+    JSON.parse(cur.dislikes).forEach(userId => {
+      if (pre[userId]) {
+        pre[userId] -= 1;
+      } else {
+        pre[userId] = -1;
+      }
+    });
+    return pre;
+  }, {});
+  Object.entries(pointsByMember).forEach(([key,value]) => {
+    setMemberPoint({
+      userId: Number(key),
+      totalPoints: value,
+    });
+  });
 }
 //#endregion
 
@@ -72,6 +101,7 @@ export async function initDatabase() {
   resetTables();
   await createMemberTable();
   createLinkTable();
+  initMembersPoints();
 
   db.close();
 }
