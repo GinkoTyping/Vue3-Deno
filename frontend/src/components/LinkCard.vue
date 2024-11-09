@@ -1,7 +1,9 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { updateLinkLike } from '../api';
 
 const props = defineProps(['theme', 'data']);
+const emits = defineEmits(['onSwitchLike']);
 const currentUserId = ref(Number(sessionStorage.getItem('userId')));
 
 const colorSettings = computed(() => {
@@ -16,8 +18,16 @@ const colorSettings = computed(() => {
     }
 });
 
-const isLiked = computed(() => row.value.likes.includes(currentUserId.value));
-const isDisliked = computed(() => row.value.dislikes.includes(currentUserId.value));
+// likeStatus: 0 dislike, 1 like, 2 default
+const likeStatus = computed(() => {
+  if (row.value.likes.includes(currentUserId.value)) {
+    return 1;
+  } else if (row.value.dislikes.includes(currentUserId.value)) {
+    return 0;
+  } else {
+    return 2;
+  }
+});
 
 const row = ref({});
 watch(
@@ -30,6 +40,24 @@ watch(
     immediate: true,
   }
 );
+
+async function switchLike(isLike) {
+  let status;
+  if ((isLike && likeStatus.value === 1) || (!isLike && likeStatus.value === 0)) {
+    status = 2;
+  } else {
+    status = isLike ? 1 : 0;
+  }
+
+  const { isSuccess } = await updateLinkLike({
+    userId: currentUserId.value,
+    linkId: row.value.linkId,
+    likeStatus: status,
+  });
+  if (isSuccess) {
+    emits('onSwitchLike');
+  }
+}
 
 </script>
 
@@ -44,13 +72,17 @@ watch(
       <p style="color: rgb(136, 136, 136)">{{ row.createdAt }}</p>
     </div>
     <div class="colunm colunm-4">
-      <div class="icon-container">
-        <img v-if="isLiked" src="@/assets/like-fill.png" alt="">
+      <div 
+        class="icon-container" 
+        @click="() => switchLike(true)">
+        <img v-if="likeStatus === 1" src="@/assets/like-fill.png" alt="">
         <img v-else src="@/assets/like.png" alt="">
         <span>{{ row.likesCount }}</span>
       </div>
-      <div class="icon-container">
-        <img v-if="isDisliked" src="@/assets/dislike_fill.png" alt="">
+      <div 
+        class="icon-container" 
+        @click="() => switchLike(false)">
+        <img v-if="likeStatus === 0" src="@/assets/dislike_fill.png" alt="">
         <img v-else src="@/assets/dislike.png" alt="">
         <span>{{ row.dislikesCount }}</span>
       </div>

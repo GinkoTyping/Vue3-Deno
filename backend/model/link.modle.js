@@ -20,7 +20,10 @@ export function insertLink(linkInfo, close = false) {
 
 export function getAllLink() {
   const db = getDB();
-  return db.queryEntries(`SELECT * FROM link`);
+  const output = db.queryEntries(`SELECT * FROM link`);
+  db.close();
+
+  return output;
 }
 
 export function getLinkById(id) {
@@ -29,10 +32,13 @@ export function getLinkById(id) {
   }
 
   const db = getDB();
-  return db.queryEntries(
+  const output = db.queryEntries(
     `SELECT * FROM link WHERE linkid=?1`,
     [id],
   )?.[0];
+  db.close();
+
+  return output;
 }
 
 export function updateLinkRatings(close = false) {
@@ -61,7 +67,10 @@ export function updateLinkRatings(close = false) {
       rateCount,
     });
 
-    db.query(`UPDATE link SET rating = ?1 WHERE linkId = ?2`, [Math.ceil(rating), index]);
+    db.query(
+      `UPDATE link SET rating = ?1 WHERE linkId = ?2`,
+      [Math.ceil(rating), index]
+    );
   }
 
   if (close) {
@@ -69,9 +78,10 @@ export function updateLinkRatings(close = false) {
   }
 }
 
+// likeStatus: 0 dislike, 1 like, 2 default
 export function updateLinkLike(params) {
   const db = getDB();
-  const { linkId, isLike, userId } = params;
+  const { linkId, likeStatus, userId } = params;
 
   const link = params.link 
     ? params.link 
@@ -83,25 +93,27 @@ export function updateLinkLike(params) {
     let curLikes = JSON.parse(link.likes);
     let curDislikes = JSON.parse(link.dislikes);
 
-    if (isLike && !curLikes.includes(userId)) {
+    if (likeStatus === 1 && !curLikes.includes(userId)) {
       curLikes.push(userId);
       curDislikes = curDislikes.filter(item => item !== userId);
-    } else if (!isLike && !curDislikes.includes(userId)) {
+    } else if (likeStatus === 0 && !curDislikes.includes(userId)) {
       curDislikes.push(userId);
       curLikes = curLikes.filter(item => item !== userId);
+    } else {
+      curDislikes = curDislikes.filter(item => item !== userId);
+      curLikes = curLikes.filter(item => item !== userId);
     }
-
+    
     db.query(
       `UPDATE link SET likes=?1, dislikes=?2 WHERE linkId=?3`,
       [
         JSON.stringify(curLikes), 
         JSON.stringify(curDislikes), 
-        linkId,
+        linkId
       ],
     );
 
-    updateLinkRatings();
-    db.close();
+    updateLinkRatings(true);
   } else {
     throw new Error('Invalid linkId.')
   }

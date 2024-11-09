@@ -16,14 +16,18 @@ const isShowFavorite = ref(false);
 
 const currentList = computed(() => isShowFavorite.value ? favoriteLinks.value : allLinks.value);
 
-onMounted(async () => {
+onMounted(() => {
+  init();
+});
+
+async function init() {
   allLinks.value = await getAllLink();
 
   if (userId.value) {
     await updatePoints();
     await updateFavorites();
   }
-});
+}
 
 function onClickUsernameOrLogin() {
   if (!username.value) {
@@ -58,6 +62,10 @@ async function updateFavorites() {
   favoriteLinks.value = await getFavorite(userId.value);
 }
 
+function handleSwitchLike() {
+  init();
+}
+
 </script>
 
 <template>
@@ -81,6 +89,7 @@ async function updateFavorites() {
         :key="link.linkId" 
         :theme="index % 2 === 0 ? 'light' : 'dark'"
         :data="link"
+        @on-switch-like="handleSwitchLike"
       />
     </div>
   </div>

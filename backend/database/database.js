@@ -2,7 +2,7 @@ import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 
 import DEFAULT_MEMBER from "./default-data/member.js";
 import DEFAULT_LINK from "./default-data/link.js";
-import { passwordHash } from "../util/index.js";
+import { getDB, passwordHash } from "../util/index.js";
 import { insertLink, updateLinkRatings } from "../model/link.modle.js";
 
 let db;
@@ -66,7 +66,8 @@ function createLinkTable() {
 //#endregion
 
 export async function initDatabase() {
-  db = new DB("./database/Database.db");
+  
+  db = getDB();
 
   resetTables();
   await createMemberTable();

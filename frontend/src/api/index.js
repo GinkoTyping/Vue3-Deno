@@ -51,3 +51,19 @@ export async function getFavorite(userId) {
   const res = await fetch(`${BASE_URL}/link/favorite/${userId}`);
   return res.json();
 }
+
+// likeStatus: 0 dislike, 1 like, 2 default
+export async function updateLinkLike(params) {
+  const { userId, linkId, likeStatus } = params;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      userId,
+      linkId,
+      likeStatus,
+    }),
+  };
+  const res = await fetch(`${BASE_URL}/link/update-like`, options);
+  return res.json();
+}

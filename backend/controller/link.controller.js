@@ -31,7 +31,7 @@ export function queryFavoriteLinks(context) {
 }
 
 export async function handleUpdateLinkLike(context) {
-  const { isLike, linkId, userId } = await context.request.body.json();
+  const { likeStatus, linkId, userId } = await context.request.body.json();
   const link = getLinkById(linkId);
 
   if (!link) {
@@ -42,9 +42,9 @@ export async function handleUpdateLinkLike(context) {
     return;
   }
 
-  updateLinkLike({ link, linkId, isLike, userId });
+  updateLinkLike({ link, linkId, likeStatus, userId });
 
-  context.reponse.body = {
+  context.response.body = {
     messgae: 'Update succeeded.',
     isSuccess: true,
   };
