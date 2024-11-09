@@ -10,7 +10,13 @@ export async function handleLogin(context) {
   if (member) {
     const isRight = await passwordVerify(inputPassword, member.password);
     isRight
-      ? data = { isSuccess: true, message: 'Login succeeded.', username: member.username, userId: member.userId }
+      ? data = { 
+        isSuccess: true, 
+        message: 'Login succeeded.', 
+        username: member.username, 
+        userId: member.userId,
+        points: member.points,
+      }
       : data = { isSuccess: false, message: 'Wrong password, please check it.' };
   } else {
     data = { isSuccess: false, message: 'Wrong username, please check it.' };
@@ -30,4 +36,12 @@ export async function handleRegister(context) {
     member: newMember,
     message: isSuccess ? 'Register succeeded.' : `Register failed. Username "${username}" is used already.`,
   };
+}
+
+export async function queryUser(context) {
+  const { username } = await context.request.body.json();
+  const member = getLoginMember(username);
+  
+  delete(member.password);
+  context.response.body = member;
 }

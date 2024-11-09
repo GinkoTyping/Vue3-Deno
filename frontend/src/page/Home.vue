@@ -3,11 +3,12 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import LinkCard from '@/components/LinkCard.vue';
-import { getAllLink, getFavorite } from '@/api';
-// TODO Implement user point
+import { getAllLink, getFavorite, getMemberInfo } from '@/api';
+
 const router = useRouter();
 const userId = ref(sessionStorage.getItem('userId'));
 const username = ref(sessionStorage.getItem('username'));
+const points = ref(sessionStorage.getItem('points'));
 
 const allLinks = ref([]);
 const favoriteLinks = ref([]);
@@ -17,8 +18,10 @@ const currentList = computed(() => isShowFavorite.value ? favoriteLinks.value : 
 
 onMounted(async () => {
   allLinks.value = await getAllLink();
+
   if (userId.value) {
-    favoriteLinks.value = await getFavorite(userId.value);
+    await updatePoints();
+    await updateFavorites();
   }
 });
 
@@ -46,6 +49,15 @@ function onSwitchList(goFavorite) {
   isShowFavorite.value = !isShowFavorite.value;
 }
 
+async function updatePoints() {
+  const res = await getMemberInfo(username.value);
+  points.value = res.points;
+}
+
+async function updateFavorites() {
+  favoriteLinks.value = await getFavorite(userId.value);
+}
+
 </script>
 
 <template>
@@ -57,7 +69,9 @@ function onSwitchList(goFavorite) {
         <div @click="() => onSwitchList(true)" :class="[isShowFavorite ? 'active' : '']" v-show="username">My Favorite</div>
       </div>
       <div class="right">
-        <div class="user" @click="onClickUsernameOrLogin">{{ username ? username : 'Login' }}</div>
+        <div class="user" @click="onClickUsernameOrLogin">
+          {{ username ? `${username} (${points})` : 'Login' }}
+        </div>
         <div class="action" @click="() => backToLogin(true)" v-show="username">Log Out</div>
       </div>
     </header>

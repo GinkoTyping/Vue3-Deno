@@ -24,6 +24,7 @@ async function submit() {
     if (res.isSuccess) {
       sessionStorage.setItem('userId', res.userId);
       sessionStorage.setItem('username', res.username);
+      sessionStorage.setItem('points', res.points);
       router.push('/home');
     }
   } else {

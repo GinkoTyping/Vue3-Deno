@@ -29,7 +29,20 @@ export async function register(params) {
   return res.json();
 }
 
-export async function getAllLink(params) {
+export async function getMemberInfo(username) {
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      username,
+    }),
+  };
+
+  const res = await fetch(`${BASE_URL}/member/query`, options);
+  return res.json();
+}
+
+export async function getAllLink() {
   const res = await fetch(`${BASE_URL}/link/all`);
   return res.json();
 }
