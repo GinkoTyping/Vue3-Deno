@@ -23,7 +23,19 @@ export function getAllLink() {
   return db.queryEntries(`SELECT * FROM link`);
 }
 
-export function updateLinkRatings() {
+export function getLinkById(id) {
+  if (!id) {
+    return;
+  }
+
+  const db = getDB();
+  return db.queryEntries(
+    `SELECT * FROM link WHERE linkid=?1`,
+    [id],
+  )?.[0];
+}
+
+export function updateLinkRatings(close = false) {
   const db = getDB();
 
   const output = db.query(`SELECT likes, dislikes FROM link`);
@@ -50,5 +62,47 @@ export function updateLinkRatings() {
     });
 
     db.query(`UPDATE link SET rating = ?1 WHERE linkId = ?2`, [Math.ceil(rating), index]);
+  }
+
+  if (close) {
+    db.close();
+  }
+}
+
+export function updateLinkLike(params) {
+  const db = getDB();
+  const { linkId, isLike, userId } = params;
+
+  const link = params.link 
+    ? params.link 
+    : db.queryEntries(`
+      SELECT likes,dislikes FROM link WHERE linkId=?1`,
+      [linkId]
+    )?.[0];
+  if (link) {
+    let curLikes = JSON.parse(link.likes);
+    let curDislikes = JSON.parse(link.dislikes);
+
+    if (isLike && !curLikes.includes(userId)) {
+      curLikes.push(userId);
+      curDislikes = curDislikes.filter(item => item !== userId);
+    } else if (!isLike && !curDislikes.includes(userId)) {
+      curDislikes.push(userId);
+      curLikes = curLikes.filter(item => item !== userId);
+    }
+
+    db.query(
+      `UPDATE link SET likes=?1, dislikes=?2 WHERE linkId=?3`,
+      [
+        JSON.stringify(curLikes), 
+        JSON.stringify(curDislikes), 
+        linkId,
+      ],
+    );
+
+    updateLinkRatings();
+    db.close();
+  } else {
+    throw new Error('Invalid linkId.')
   }
 }

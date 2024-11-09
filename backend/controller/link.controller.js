@@ -1,4 +1,4 @@
-import { getAllLink } from "../model/link.modle.js";
+import { getAllLink, getLinkById, updateLinkLike } from "../model/link.modle.js";
 import { formatDate } from "../util/index.js";
 
 export function mapLinksToFrontend(links) {
@@ -28,5 +28,25 @@ export function queryFavoriteLinks(context) {
     });
     context.response.body = mapLinksToFrontend(output);
   }
+}
+
+export async function handleUpdateLinkLike(context) {
+  const { isLike, linkId, userId } = await context.request.body.json();
+  const link = getLinkById(linkId);
+
+  if (!link) {
+    context.response.status = 400;
+    context.response.body = {
+      messgae: 'Invalid linkId.'
+    };
+    return;
+  }
+
+  updateLinkLike({ link, linkId, isLike, userId });
+
+  context.reponse.body = {
+    messgae: 'Update succeeded.',
+    isSuccess: true,
+  };
 }
 

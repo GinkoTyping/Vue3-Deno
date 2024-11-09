@@ -60,7 +60,7 @@ function createLinkTable() {
   DEFAULT_LINK.forEach((defaultLink) => {
     insertLink(defaultLink);
   });
-  updateLinkRatings();
+  updateLinkRatings(true);
 }
 
 //#endregion
