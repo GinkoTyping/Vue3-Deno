@@ -1,8 +1,15 @@
 import { getDB, getAverageScore } from "../util/index.js";
 import { getMemberById } from "./member.modle.js";
 
-export function insertLink(linkInfo, close = false) {
+export function insertLink(linkInfo, randomTime = false, close = false) {
   const db = getDB();
+  let time = new Date();
+  if (randomTime) {
+    const max = 10800000;
+    const min = 1800000;
+    const random = Math.floor(Math.random() * (max - min + 1)) + min;
+    time -= random;
+  }
   db.query(`INSERT INTO link VALUES(null, ?1, ?2, 0,?3, ?4, ?5, ?6, ?7, 0, ?8)`, [
     linkInfo.userId,
     linkInfo.userName,
@@ -11,7 +18,7 @@ export function insertLink(linkInfo, close = false) {
     linkInfo.isShow,
     JSON.stringify(linkInfo.likes ?? ""),
     JSON.stringify(linkInfo.dislikes ?? ""),
-    Date.now(),
+    time,
   ]);
 
   if (close) {

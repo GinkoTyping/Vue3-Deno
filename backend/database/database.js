@@ -86,7 +86,7 @@ function createLinkTable() {
   `);
 
   DEFAULT_LINK.forEach((defaultLink) => {
-    insertLink(defaultLink);
+    insertLink(defaultLink, true);
   });
   updateLinkRatings(true);
 }
