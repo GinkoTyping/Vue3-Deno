@@ -97,7 +97,12 @@ function handleSwitchLike() {
         <div class="action" @click="() => backToLogin(true)" v-show="username">Log Out</div>
       </div>
     </header>
+    <div class="add-container">
+      <div class="add-button">Post Link</div>
+    </div>
     <div class="link-container">
+      <div class="sort sorting rating"></div>
+      <div class="sort created-at"></div>
       <link-card v-for="(link, index) in currentList" :key="link.linkId" :theme="index % 2 === 0 ? 'light' : 'dark'"
         :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1"/>
     </div>
@@ -111,8 +116,32 @@ function handleSwitchLike() {
 }
 
 .link-container {
-  padding: 12px;
+  padding: 0 12px;
+  position: relative;
 }
+
+.link-container .sort {
+  position: absolute;
+  top: 2px;
+  height: 8px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: rgb(189, 123, 104);
+}
+.sorting {
+  height: 4px !important;
+  border-bottom-left-radius: 2px !important;
+  border-bottom-right-radius: 2px !important;
+}
+.link-container .created-at {
+  width: 94px;
+  right: 118px;
+}
+.link-container .rating {
+  width: 40px;
+  left: 15px;
+}
+
 
 header {
   display: flex;
@@ -154,5 +183,23 @@ header img {
 
 .right .action {
   background-color: rgb(255, 240, 205);
+}
+
+.add-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 12px;
+}
+
+.add-button {
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 4px;
+  width: 104px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 28px;
+  color: rgb(136, 136, 136);
+  background-color: var(--primary-color);
 }
 </style>
