@@ -13,8 +13,29 @@ export function mapLinksToFrontend(links) {
   }));
 }
 
-export function queryAllLinks(context) {
-  context.response.body = mapLinksToFrontend(getAllLink());
+async function getSortParams(context) {
+  let sortInfo;
+  if (context.request.method === 'GET') {
+    const query = context.request.url.searchParams;
+    const column = query.get('column');
+    const order = JSON.parse(query.get('isDesc')) ? 'DESC' : 'ASC';
+    if (column) {
+      sortInfo = { column, order };
+    } 
+  } else {
+    const params  = await context.request?.body?.json();
+    if (params?.sortInfo) {
+      sortInfo = params.sortInfo;
+    }
+  }
+
+  return sortInfo;
+}
+
+export async function queryAllLinks(context) {
+  const sortInfo = await getSortParams(context);
+  const sortedLinks = getAllLink(sortInfo);
+  context.response.body = mapLinksToFrontend(sortedLinks);
 }
 
 export function queryFavoriteLinks(context) {

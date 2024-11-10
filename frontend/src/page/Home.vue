@@ -30,13 +30,14 @@ const currentList = computed(() => {
 onMounted(() => {
   init();
 });
-// TODO sorting and create links.
+
+// TODO sort dont need to query user.
 async function init() {
-  allLinks.value = await getAllLink();
+  allLinks.value = await getAllLink(sortInfo.value);
 
   if (userId.value) {
     await updatePoints();
-    await updateFavorites();
+    await updateFavorites(sortInfo.value);
   }
 }
 
@@ -99,6 +100,24 @@ async function postLink() {
 }
 //#endregion
 
+//#region Sorting
+const COLUMN_RATING = 'rating';
+const COLUMN_TIME = 'createdAt';
+const sortInfo = ref({
+  column: COLUMN_TIME,
+  isDesc: true,
+});
+
+function switchSorting(column) {
+  if (sortInfo.value.column === column) {
+    sortInfo.value.isDesc = !sortInfo.value.isDesc;
+  } else {
+    sortInfo.value = { column, isDesc: true };
+  }
+
+  init();
+}
+//#endregion
 </script>
 
 <template>
@@ -128,8 +147,8 @@ async function postLink() {
     </header>
 
     <div class="link-container" v-show="tabIndex !== 3">
-      <div class="sort sorting rating"></div>
-      <div class="sort created-at"></div>
+      <div class="sort sorting rating" @click="() => switchSorting(COLUMN_RATING)"></div>
+      <div class="sort created-at" @click="() => switchSorting(COLUMN_TIME)"></div>
       <link-card v-for="(link, index) in currentList" :key="link.linkId" :theme="index % 2 === 0 ? 'light' : 'dark'"
         :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1" />
     </div>

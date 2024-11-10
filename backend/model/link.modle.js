@@ -26,9 +26,20 @@ export function insertLink(linkInfo, randomTime = false, close = false) {
   }
 }
 
-export function getAllLink() {
+export function getAllLink(sortInfo) {
+  const sort = sortInfo ? sortInfo : { column: 'createdAt', order: 'DESC' };
   const db = getDB();
-  const output = db.queryEntries(`SELECT * FROM link`);
+  let output;
+  if (sort.column === 'createdAt') {
+    output = sort.order === 'DESC'
+      ? db.queryEntries('SELECT * FROM link ORDER BY createdAt DESC')
+      : db.queryEntries('SELECT * FROM link ORDER BY createdAt ASC');
+  } else if (sort.column === 'rating') {
+    output = sort.order === 'DESC'
+      ? db.queryEntries('SELECT * FROM link ORDER BY rating DESC')
+      : db.queryEntries('SELECT * FROM link ORDER BY rating ASC');
+  }
+
   db.close();
 
   return output;

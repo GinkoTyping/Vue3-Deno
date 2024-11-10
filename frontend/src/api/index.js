@@ -42,8 +42,8 @@ export async function getMemberInfo(username) {
   return res.json();
 }
 
-export async function getAllLink() {
-  const res = await fetch(`${BASE_URL}/link/all`);
+export async function getAllLink(params) {
+  const res = await fetch(`${BASE_URL}/link/all?column=${params.column}&isDesc=${params.isDesc}`);
   return res.json();
 }
 
