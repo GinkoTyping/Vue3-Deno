@@ -22,8 +22,8 @@ export default [
     userName: 'jasmine',
     title: 'History for Beginners',
     desc: "Every nation tells its own history in its own way. This important book explains what's going on behind the scenes in those tellings - who gets to decide which facts are taught, and which truths are massaged, or even denied. Using a mix of comic strips, diagrams and clear, simple language, this book shows readers how to dig deeper into any story, how to investigate recent and ancient history for themselves, and learn why it's vital to understand how the world has ended up where it is today.",
-    likes: [3],
-    dislikes: [2, 1],
+    likes: [3, 1],
+    dislikes: [2],
     isShow: 1,
   },
   {

@@ -92,7 +92,7 @@ function handleSwitchLike() {
       </div>
       <div class="right">
         <div class="user" @click="onClickUsernameOrLogin" :title="`Total Points: ${points}`">
-          {{ username ? `${username} (${points})` : 'Login' }}
+          {{ username ? `${username} [${points}]` : 'Login' }}
         </div>
         <div class="action" @click="() => backToLogin(true)" v-show="username">Log Out</div>
       </div>

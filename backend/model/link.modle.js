@@ -1,8 +1,9 @@
 import { getDB, getAverageScore } from "../util/index.js";
+import { getMemberById } from "./member.modle.js";
 
 export function insertLink(linkInfo, close = false) {
   const db = getDB();
-  db.query(`INSERT INTO link VALUES(null, ?1, ?2, ?3, ?4, ?5, ?6, ?7, 0, ?8)`, [
+  db.query(`INSERT INTO link VALUES(null, ?1, ?2, 0,?3, ?4, ?5, ?6, ?7, 0, ?8)`, [
     linkInfo.userId,
     linkInfo.userName,
     linkInfo.title,
@@ -127,6 +128,26 @@ export function updateLinkVisible(params) {
     'UPDATE link SET isShow=?1 WHERE linkId=?2',
     [isShow, linkId],
   );
+
+  db.close();
+}
+
+export function updateLinkUserPointsByUserId(userId) {
+  const db = getDB();
+
+  const links = db.queryEntries(
+    'SELECT * FROM link WHERE userId=?',
+    [userId],
+  );
+  if (links?.length) {
+    const member = getMemberById(userId);
+    links.forEach(link => {
+      db.query(
+        'UPDATE link SET userPoints=?1 WHERE linkId=?2',
+        [member.points, link.linkId],
+      );
+    });
+  }
 
   db.close();
 }

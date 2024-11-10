@@ -1,4 +1,4 @@
-import { getAllLink, getLinkById, updateLinkLike, updateLinkVisible } from "../model/link.modle.js";
+import { getAllLink, getLinkById, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.modle.js";
 import { updateMemberPoint } from "../model/member.modle.js";
 import { formatDate } from "../util/index.js";
 
@@ -52,6 +52,7 @@ export async function handleUpdateLinkLike(context) {
 
   updateLinkLike({ link, linkId, likeStatus, userId });
   handleUpdateMemberPoints(previousStatus, likeStatus, linkUserId);
+  updateLinkUserPointsByUserId(linkUserId);
 
   context.response.body = {
     message: 'Update succeeded.',
@@ -63,11 +64,11 @@ function handleUpdateMemberPoints(previousStatus, newStatus, userId) {
   
   let changedPoints;
   if (previousStatus === 0) {
-    changedPoints = newStatus === 1 ? 2 : 0;
+    changedPoints = newStatus === 1 ? 2 : 1;
   } else if (previousStatus === 1) {
-    changedPoints = newStatus === 0 ? -2 : 0;
+    changedPoints = newStatus === 0 ? -2 : -1;
   } else {
-    changedPoints = newStatus === 0 ? 1 : -1;
+    changedPoints = newStatus === 0 ? -1 : 1;
   }
   updateMemberPoint({
     userId,

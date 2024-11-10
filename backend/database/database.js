@@ -1,9 +1,7 @@
-import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
-
 import DEFAULT_MEMBER from "./default-data/member.js";
 import DEFAULT_LINK from "./default-data/link.js";
 import { getDB, passwordHash } from "../util/index.js";
-import { getAllLink, insertLink, updateLinkRatings } from "../model/link.modle.js";
+import { getAllLink, insertLink, updateLinkRatings, updateLinkUserPointsByUserId } from "../model/link.modle.js";
 import { updateMemberPoint } from "../model/member.modle.js";
 
 let db;
@@ -76,6 +74,7 @@ function createLinkTable() {
       linkId INTEGER PRIMARY KEY AUTOINCREMENT,
       userId INTEGER NOT NULL,
       userName TEXT NOT NULL,
+      userPoints TEXT NOT NULL,
       title TEXT NOT NULL,
       desc TEXT NOT NULL,
       isShow INTEGER NOT NULL,
@@ -92,16 +91,26 @@ function createLinkTable() {
   updateLinkRatings(true);
 }
 
+function initLinkMemberPoints() {
+  const db = getDB();
+  const members = db.queryEntries(
+    'SELECT userId FROM member'
+  );
+  db.close();
+  members.forEach(member => {
+    updateLinkUserPointsByUserId(member.userId);
+  });
+}
+
 //#endregion
 
 export async function initDatabase() {
-  
   db = getDB();
-
   resetTables();
   await createMemberTable();
   createLinkTable();
-  initMembersPoints();
-
   db.close();
+
+  initMembersPoints();
+  initLinkMemberPoints();
 }

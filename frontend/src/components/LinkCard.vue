@@ -88,7 +88,7 @@ async function switchVisible(isShow) {
       <a class="ellipsis-multiline" :title="row.desc"><b style="color: rgb(136, 136, 136)">[{{ row.title }}] </b>{{ row.desc }}</a> 
     </div>
     <div class="colunm colunm-3">
-      <p>{{ row.userName }}</p>
+      <p>{{ row.userName }} [{{ row.userPoints }}]</p>
       <p style="color: rgb(136, 136, 136)">{{ row.createdAt }}</p>
     </div>
     <div class="colunm colunm-4">

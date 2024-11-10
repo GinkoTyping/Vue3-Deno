@@ -14,6 +14,7 @@ export function getMemberById(userId) {
     'SELECT * FROM member WHERE userId=?',
     [userId]
   );
+  db.close();
   return member?.[0];
 }
 
