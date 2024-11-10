@@ -1,4 +1,4 @@
-import { getAllLink, getLinkById, updateLinkLike } from "../model/link.modle.js";
+import { getAllLink, getLinkById, updateLinkLike, updateLinkVisible } from "../model/link.modle.js";
 import { updateMemberPoint } from "../model/member.modle.js";
 import { formatDate } from "../util/index.js";
 
@@ -36,7 +36,7 @@ export async function handleUpdateLinkLike(context) {
   if (previousStatus === likeStatus) {
     context.response.status = 400;
     context.response.body = {
-      messgae: 'Nothing to change.'
+      message: 'Nothing to change.'
     };
     return;
   }
@@ -45,7 +45,7 @@ export async function handleUpdateLinkLike(context) {
   if (!link) {
     context.response.status = 401;
     context.response.body = {
-      messgae: 'Invalid linkId.'
+      message: 'Invalid linkId.'
     };
     return;
   }
@@ -54,7 +54,7 @@ export async function handleUpdateLinkLike(context) {
   handleUpdateMemberPoints(previousStatus, likeStatus, linkUserId);
 
   context.response.body = {
-    messgae: 'Update succeeded.',
+    message: 'Update succeeded.',
     isSuccess: true,
   };
 }
@@ -73,4 +73,24 @@ function handleUpdateMemberPoints(previousStatus, newStatus, userId) {
     userId,
     changedPoints,
   });
+}
+
+export async function handleUpdateLinkIsShow(context) {
+  const { linkId, userId, isShow } = await context.request.body.json();
+  const link = getLinkById(linkId);
+
+  if (link.userId !== userId) {
+    context.response.status = 400;
+    context.response.body = {
+      message: 'Not allowed to modify others link.'
+    };
+    return;
+  }
+
+  updateLinkVisible({ linkId, isShow });
+
+  context.response.body = {
+    isSuccess: true,
+    message: 'Switching visibilty succeeded.'
+  };
 }

@@ -16,11 +16,11 @@ const tabIndex = ref(0);
 
 const currentList = computed(() => {
   if (tabIndex.value === 0) {
-    return allLinks.value;
+    return allLinks.value.filter(link => link.isShow);
   } else if (tabIndex.value === 1) {
     return allLinks.value.filter(link => link.userId === userId.value);
   }
-  return favoriteLinks.value;
+  return favoriteLinks.value.filter(link => link.isShow);
 });
 
 onMounted(() => {

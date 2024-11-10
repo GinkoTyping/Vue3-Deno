@@ -3,6 +3,7 @@ import { oakCors } from "@tajpouria/cors";
 
 import { initDatabase } from "./database/database.js";
 import setMemberRoutes from "./route/member.route.js";
+import setLinkRoutes from "./route/link.route.js";
 
 initDatabase();
 
@@ -11,6 +12,7 @@ const app = new Application();
 app.use(oakCors());
 
 setMemberRoutes(router);
+setLinkRoutes(router);
 
 app.use(router.routes());
 app.use(router.allowedMethods());

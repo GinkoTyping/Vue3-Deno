@@ -33,15 +33,15 @@ export default [
     desc: "In the twelfth book in Stuart Gibbs’s New York Times bestselling Spy School series, superspy middle schooler Ben Ripley gets lost on a perilous mission with one of his greatest enemies.",
     likes: [3, 2],
     dislikes: [1],
-    isShow: 0,
+    isShow: 1,
   },
   {
     userId: 1,
-    userName: 'jack',
+    userName: 'jasmine',
     title: 'Percy Jackson and the Olympians',
     desc: "In his continuing quest to earn college recommendation letters from the gods, Percy has to pet sit the goddess Hecate's polecat and giant mastiff during Halloween week. What could go wrong?",
     likes: [3],
     dislikes: [],
-    isShow: 0,
+    isShow: 1,
   },
 ]

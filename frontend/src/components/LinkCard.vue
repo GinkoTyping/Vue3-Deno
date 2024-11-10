@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { updateLinkLike } from '../api';
+import { updateLinkIsShow, updateLinkLike } from '../api';
 
 const props = defineProps(['theme', 'data', 'visibility']);
 const emits = defineEmits(['onSwitchLike']);
@@ -61,8 +61,22 @@ async function switchLike(isLike) {
   }
 }
 
-function switchVisible(isVisible) {
+async function switchVisible(isShow) {
+  if (currentUserId.value !== row.value.userId) {
+    alert(`Not allow to modify links of ${row.value.username}`);
+    return;
+  }
+
+  const res = await updateLinkIsShow({
+    userId: currentUserId.value,
+    linkId: row.value.linkId,
+    isShow,
+  });
   
+  alert(res.message);
+  if (res.isSuccess) {
+    emits('onSwitchLike');
+  }
 }
 
 </script>

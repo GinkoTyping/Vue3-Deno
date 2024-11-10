@@ -46,7 +46,7 @@ export function updateLinkRatings(close = false) {
 
   const output = db.query(`SELECT likes, dislikes FROM link`);
   const totalLinkCount = output.length;
-  const { totalLikeCount, totalAllRateCount  } = output.reduce((pre, cur) => {
+  const { totalLikeCount, totalAllRateCount } = output.reduce((pre, cur) => {
     pre.totalLikeCount += JSON.parse(cur[0]).length;
     pre.totalAllRateCount += JSON.parse(cur[0]).length + JSON.parse(cur[1]).length;
 
@@ -55,7 +55,7 @@ export function updateLinkRatings(close = false) {
 
   const avgNumOfRatingsForAll = totalAllRateCount / totalLinkCount;
   const avgRatingForAll = totalLikeCount / (totalAllRateCount * totalLinkCount);
-  
+
 
   for (let index = 1; index <= totalLinkCount; index++) {
     const totalRating = JSON.parse(output[index - 1][0]).length;
@@ -83,8 +83,8 @@ export function updateLinkLike(params) {
   const db = getDB();
   const { linkId, likeStatus, userId } = params;
 
-  const link = params.link 
-    ? params.link 
+  const link = params.link
+    ? params.link
     : db.queryEntries(`
       SELECT likes,dislikes FROM link WHERE linkId=?1`,
       [linkId]
@@ -103,12 +103,12 @@ export function updateLinkLike(params) {
       curDislikes = curDislikes.filter(item => item !== userId);
       curLikes = curLikes.filter(item => item !== userId);
     }
-    
+
     db.query(
       `UPDATE link SET likes=?1, dislikes=?2 WHERE linkId=?3`,
       [
-        JSON.stringify(curLikes), 
-        JSON.stringify(curDislikes), 
+        JSON.stringify(curLikes),
+        JSON.stringify(curDislikes),
         linkId
       ],
     );
@@ -117,4 +117,16 @@ export function updateLinkLike(params) {
   } else {
     throw new Error('Invalid linkId.')
   }
+}
+
+export function updateLinkVisible(params) {
+  const { linkId, isShow } = params;
+
+  const db = getDB();
+  db.query(
+    'UPDATE link SET isShow=?1 WHERE linkId=?2',
+    [isShow, linkId],
+  );
+
+  db.close();
 }

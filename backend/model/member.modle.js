@@ -37,9 +37,9 @@ export function updateMemberPoint(params) {
   const db = getDB();
 
   let finalPoints;
-  if (totalPoints) {
+  if (!isNaN(totalPoints)) {
     finalPoints = totalPoints;
-  } else if (changedPoints) {
+  } else if (!isNaN(changedPoints)) {
     const user = db.queryEntries('SELECT points FROM member WHERE userId=?1', [userId])?.[0];
     finalPoints = user.points + changedPoints;
   }
