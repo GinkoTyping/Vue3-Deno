@@ -1,5 +1,5 @@
-import { getAllLink, getLinkById, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.modle.js";
-import { updateMemberPoint } from "../model/member.modle.js";
+import { getAllLink, getLinkById, insertLink, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.modle.js";
+import { getMemberById, updateMemberPoint } from "../model/member.modle.js";
 import { formatDate } from "../util/index.js";
 
 export function mapLinksToFrontend(links) {
@@ -93,5 +93,31 @@ export async function handleUpdateLinkIsShow(context) {
   context.response.body = {
     isSuccess: true,
     message: 'Switching visibilty succeeded.'
+  };
+}
+
+export async function handlePostLink(context) {
+  const { title, desc, userId } = await context.request.body.json();
+  const user = getMemberById(userId);
+  if (!user) {
+    context.response.status = 400;
+    context.response.body = {
+      message: 'Invalid userId.'
+    };
+    return;
+  }
+  const linkInfo = {
+    userId,
+    title,
+    desc,
+    username: user.username,
+    isShow: true,
+  };
+
+  insertLink(linkInfo, false, true);
+
+  context.response.body = {
+    isSuccess: true,
+    message: 'Post link succeeded.'
   };
 }

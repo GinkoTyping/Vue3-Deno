@@ -73,3 +73,14 @@ export async function updateLinkIsShow(params) {
   const res = await fetch(`${BASE_URL}/link/update-show`, options);
   return res.json();
 }
+
+export async function addNewLink(params) {
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify(params),
+  };
+
+  const res = await fetch(`${BASE_URL}/link/add`, options);
+  return res.json();
+}

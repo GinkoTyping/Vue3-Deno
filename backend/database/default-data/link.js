@@ -1,7 +1,7 @@
 export default [
   {
     userId: 2,
-    userName: 'jack',
+    username: 'jack',
     title: 'Diary of a Wimpy Kid',
     desc: 'lIn Hot Mess, book 19 of the Diary of a Wimpy Kid series from #1 international bestselling author Jeff Kinney, Greg Heffley is in for a particularly awkward summer with his whole family.',
     likes: [3, 1, 2],
@@ -10,7 +10,7 @@ export default [
   },
   {
     userId: 3,
-    userName: 'haska',
+    username: 'haska',
     title: 'Sticker Friends Christmas',
     desc: "Celebrate the season with this festive sticker activity book packed full of yuletide scenes, from bestselling children's book author Roger Priddy!",
     likes: [1],
@@ -19,7 +19,7 @@ export default [
   },
   {
     userId: 1,
-    userName: 'jasmine',
+    username: 'jasmine',
     title: 'History for Beginners',
     desc: "Every nation tells its own history in its own way. This important book explains what's going on behind the scenes in those tellings - who gets to decide which facts are taught, and which truths are massaged, or even denied. Using a mix of comic strips, diagrams and clear, simple language, this book shows readers how to dig deeper into any story, how to investigate recent and ancient history for themselves, and learn why it's vital to understand how the world has ended up where it is today.",
     likes: [3, 1],
@@ -28,7 +28,7 @@ export default [
   },
   {
     userId: 2,
-    userName: 'jack',
+    username: 'jack',
     title: 'Spy School Goes Wild',
     desc: "In the twelfth book in Stuart Gibbs’s New York Times bestselling Spy School series, superspy middle schooler Ben Ripley gets lost on a perilous mission with one of his greatest enemies.",
     likes: [3, 2],
@@ -37,7 +37,7 @@ export default [
   },
   {
     userId: 1,
-    userName: 'jasmine',
+    username: 'jasmine',
     title: 'Percy Jackson and the Olympians',
     desc: "In his continuing quest to earn college recommendation letters from the gods, Percy has to pet sit the goddess Hecate's polecat and giant mastiff during Halloween week. What could go wrong?",
     likes: [3],

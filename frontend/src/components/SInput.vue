@@ -39,5 +39,6 @@ const currentPlaceholder = computed(() => `Please input your ${(props.label).toL
   border-radius: 4px;
   border-width: 1px;
   border-color: rgba(128, 128, 128, 0.315);
+  background-color: #fff;
 }
 </style>

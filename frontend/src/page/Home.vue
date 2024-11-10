@@ -2,8 +2,10 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
+import SInput from '@/components/SInput.vue';
 import LinkCard from '@/components/LinkCard.vue';
 import { getAllLink, getFavorite, getMemberInfo } from '@/api';
+import { addNewLink } from '../api';
 
 const router = useRouter();
 const userId = ref(Number(sessionStorage.getItem('userId')));
@@ -28,7 +30,7 @@ const currentList = computed(() => {
 onMounted(() => {
   init();
 });
-
+// TODO sorting and create links.
 async function init() {
   allLinks.value = await getAllLink();
 
@@ -75,6 +77,28 @@ function handleSwitchLike() {
   init();
 }
 
+//#region Post Link
+const newLinkInfo = ref({
+  userId: userId.value,
+  title: '',
+  desc: '',
+});
+
+const isAllowNewLink = computed(() => {
+  return newLinkInfo.value.title && newLinkInfo.value.desc;
+});
+
+async function postLink() {
+  if (newLinkInfo.value.title && newLinkInfo.value.desc) {
+    const res = await addNewLink(newLinkInfo.value);
+    if (res.isSuccess) {
+      alert(res.message);
+      init();
+    }
+  }
+}
+//#endregion
+
 </script>
 
 <template>
@@ -107,7 +131,16 @@ function handleSwitchLike() {
       <div class="sort sorting rating"></div>
       <div class="sort created-at"></div>
       <link-card v-for="(link, index) in currentList" :key="link.linkId" :theme="index % 2 === 0 ? 'light' : 'dark'"
-        :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1"/>
+        :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1" />
+    </div>
+
+    <div class="add-container" v-show="tabIndex === 3">
+      <SInput label="Title" v-model="newLinkInfo.title" />
+      <SInput label="Description" v-model="newLinkInfo.desc" />
+      <button 
+        :style="{ cursor: isAllowNewLink ? 'pointer' : 'not-allowed' }" 
+        class="add-button" 
+        @click="postLink">New Link</button>
     </div>
   </div>
 </template>
@@ -131,15 +164,18 @@ function handleSwitchLike() {
   border-bottom-right-radius: 4px;
   background-color: rgb(189, 123, 104);
 }
+
 .sorting {
   height: 4px !important;
   border-bottom-left-radius: 2px !important;
   border-bottom-right-radius: 2px !important;
 }
+
 .link-container .created-at {
   width: 94px;
   right: 118px;
 }
+
 .link-container .rating {
   width: 40px;
   left: 15px;
@@ -186,5 +222,23 @@ header img {
 
 .right .action {
   background-color: rgb(255, 240, 205);
+}
+
+.add-container {
+  margin: 14px auto;
+  width: 500px;
+}
+
+.add-container .add-button {
+  width: 100%;
+  padding: 0;
+  font-size: 16px;
+  border-radius: 4px;
+  height: 48px;
+  line-height: 48px;
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  background-color: rgb(255, 240, 205);
+  color: var(--primary-text-color);
 }
 </style>

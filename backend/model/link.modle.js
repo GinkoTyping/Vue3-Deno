@@ -12,12 +12,12 @@ export function insertLink(linkInfo, randomTime = false, close = false) {
   }
   db.query(`INSERT INTO link VALUES(null, ?1, ?2, 0,?3, ?4, ?5, ?6, ?7, 0, ?8)`, [
     linkInfo.userId,
-    linkInfo.userName,
+    linkInfo.username,
     linkInfo.title,
     linkInfo.desc,
     linkInfo.isShow,
-    JSON.stringify(linkInfo.likes ?? ""),
-    JSON.stringify(linkInfo.dislikes ?? ""),
+    JSON.stringify(linkInfo.likes ?? []),
+    JSON.stringify(linkInfo.dislikes ?? []),
     time,
   ]);
 
@@ -68,12 +68,14 @@ export function updateLinkRatings(close = false) {
   for (let index = 1; index <= totalLinkCount; index++) {
     const totalRating = JSON.parse(output[index - 1][0]).length;
     const rateCount = totalRating + JSON.parse(output[index - 1][1]).length;
-    const rating = getAverageScore({
-      avgNumOfRatingsForAll,
-      avgRatingForAll,
-      totalRating,
-      rateCount,
-    });
+    const rating = rateCount === 0
+      ? 0
+      : getAverageScore({
+        avgNumOfRatingsForAll,
+        avgRatingForAll,
+        totalRating,
+        rateCount,
+      });
 
     db.query(
       `UPDATE link SET rating = ?1 WHERE linkId = ?2`,

@@ -88,3 +88,7 @@ body {
   --secondary-color: rgb(255, 240, 205);
   --primary-text-color: rgb(26, 57, 89);
 }
+
+input {
+  color: var(--primary-text-color);
+}
