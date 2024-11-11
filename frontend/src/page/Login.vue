@@ -7,8 +7,8 @@ import { login, register } from '@/api';
 
 const router = useRouter();
 const form = ref({
-  username: 'jasmine',
-  password: '666666',
+  username: '',
+  password: '',
 });
 const isLogin = ref(true);
 const texts = computed(() => {

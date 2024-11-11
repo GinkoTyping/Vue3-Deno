@@ -31,7 +31,6 @@ onMounted(() => {
   init();
 });
 
-// TODO sort dont need to query user.
 async function init() {
   allLinks.value = await getAllLink(sortInfo.value);
 
@@ -93,6 +92,9 @@ async function postLink() {
   if (newLinkInfo.value.title && newLinkInfo.value.desc) {
     const res = await addNewLink(newLinkInfo.value);
     if (res.isSuccess) {
+      newLinkInfo.value.title = '';
+      newLinkInfo.value.desc = '';
+
       alert(res.message);
       init();
     }
@@ -147,8 +149,9 @@ function switchSorting(column) {
     </header>
 
     <div class="link-container" v-show="tabIndex !== 3">
-      <div class="sort sorting rating" @click="() => switchSorting(COLUMN_RATING)"></div>
-      <div class="sort created-at" @click="() => switchSorting(COLUMN_TIME)"></div>
+      <div title="Sort" class="sort rating" :class="[sortInfo.column === COLUMN_RATING ? 'sorting' : '']" @click="() => switchSorting(COLUMN_RATING)"></div>
+      <div title="Sort" class="sort created-at" :class="[sortInfo.column === COLUMN_TIME ? 'sorting' : '']" @click="() => switchSorting(COLUMN_TIME)"></div>
+
       <link-card v-for="(link, index) in currentList" :key="link.linkId" :theme="index % 2 === 0 ? 'light' : 'dark'"
         :data="link" @on-switch-like="handleSwitchLike" :visibility="tabIndex === 1" />
     </div>
@@ -156,10 +159,8 @@ function switchSorting(column) {
     <div class="add-container" v-show="tabIndex === 3">
       <SInput label="Title" v-model="newLinkInfo.title" />
       <SInput label="Description" v-model="newLinkInfo.desc" />
-      <button 
-        :style="{ cursor: isAllowNewLink ? 'pointer' : 'not-allowed' }" 
-        class="add-button" 
-        @click="postLink">New Link</button>
+      <button :style="{ cursor: isAllowNewLink ? 'pointer' : 'not-allowed' }" class="add-button" @click="postLink">New
+        Link</button>
     </div>
   </div>
 </template>
@@ -182,6 +183,7 @@ function switchSorting(column) {
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
   background-color: rgb(189, 123, 104);
+  cursor: pointer;
 }
 
 .sorting {
