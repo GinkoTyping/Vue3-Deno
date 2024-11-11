@@ -21,14 +21,15 @@ async function submit() {
   let res;
   if (isLogin.value) {
     res = await login(form.value);
-    if (res.isSuccess) {
-      sessionStorage.setItem('userId', res.userId);
-      sessionStorage.setItem('username', res.username);
-      sessionStorage.setItem('points', res.points);
-      router.push('/home');
-    }
   } else {
     res = await register(form.value);
+  }
+
+  if (res.isSuccess) {
+    sessionStorage.setItem('userId', res.userId);
+    sessionStorage.setItem('username', res.username);
+    sessionStorage.setItem('points', res.points);
+    router.push('/home');
   }
 
   alert(res.message);
