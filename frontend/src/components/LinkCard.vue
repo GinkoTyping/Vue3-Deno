@@ -41,6 +41,7 @@ watch(
   }
 );
 
+// Like status
 async function switchLike(isLike) {
   let status;
   if ((isLike && likeStatus.value === 1) || (!isLike && likeStatus.value === 0)) {
@@ -61,6 +62,7 @@ async function switchLike(isLike) {
   }
 }
 
+// Hide status
 async function switchVisible(isShow) {
   if (currentUserId.value !== row.value.userId) {
     alert(`Not allow to modify links of ${row.value.username}`);

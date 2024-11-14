@@ -16,6 +16,7 @@ const allLinks = ref([]);
 const favoriteLinks = ref([]);
 const tabIndex = ref(0);
 
+// To filter list by tabs
 const currentList = computed(() => {
   if (tabIndex.value === 0) {
     return allLinks.value.filter(link => link.isShow);
@@ -27,10 +28,12 @@ const currentList = computed(() => {
   return [];
 });
 
+// Trigger when components are loaded well
 onMounted(() => {
   init();
 });
 
+// Init or refresh all data in the home page
 async function init() {
   allLinks.value = await getAllLink(sortInfo.value);
 
@@ -56,6 +59,7 @@ function backToLogin(needComfirm = false) {
   }
 }
 
+// Update current tab inex
 function onSwitchList(index) {
   if (tabIndex.value === index) {
     return;
@@ -73,6 +77,7 @@ async function updateFavorites() {
   favoriteLinks.value = await getFavorite(userId.value);
 }
 
+// When 'like' status changes, it affects ratings of all links, its owner's points and the link itself. So refresh data after a user switches 'like' staus
 function handleSwitchLike() {
   init();
 }

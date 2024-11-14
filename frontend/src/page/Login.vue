@@ -25,6 +25,7 @@ async function submit() {
     res = await register(form.value);
   }
 
+  // if a user login or successfully registered an account, auto login
   if (res.isSuccess) {
     sessionStorage.setItem('userId', res.userId);
     sessionStorage.setItem('username', res.username);
