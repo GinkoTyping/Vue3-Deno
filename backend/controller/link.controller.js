@@ -1,5 +1,5 @@
-import { getAllLink, getLinkById, insertLink, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.modle.js";
-import { getMemberById, updateMemberPoint } from "../model/member.modle.js";
+import { getAllLink, getLinkById, insertLink, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.model.js";
+import { getMemberById, updateMemberPoint } from "../model/member.model.js";
 import { formatDate } from "../util/index.js";
 
 export function mapLinksToFrontend(links) {

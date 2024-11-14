@@ -1,4 +1,4 @@
-import { getLoginMember, setRegisterMember } from "../model/member.modle.js";
+import { getLoginMember, setRegisterMember } from "../model/member.model.js";
 import { passwordVerify } from "../util/index.js";
 
 export async function handleLogin(context) {

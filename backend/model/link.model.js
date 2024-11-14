@@ -1,5 +1,5 @@
 import { getDB, getAverageScore } from "../util/index.js";
-import { getMemberById } from "./member.modle.js";
+import { getMemberById } from "./member.model.js";
 
 export function insertLink(linkInfo, randomTime = false, close = false) {
   const db = getDB();

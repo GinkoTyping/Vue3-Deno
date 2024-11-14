@@ -1,8 +1,8 @@
 import DEFAULT_MEMBER from "./default-data/member.js";
 import DEFAULT_LINK from "./default-data/link.js";
 import { getDB, passwordHash } from "../util/index.js";
-import { getAllLink, insertLink, updateLinkRatings, updateLinkUserPointsByUserId } from "../model/link.modle.js";
-import { updateMemberPoint } from "../model/member.modle.js";
+import { getAllLink, insertLink, updateLinkRatings, updateLinkUserPointsByUserId } from "../model/link.model.js";
+import { updateMemberPoint } from "../model/member.model.js";
 
 let db;
 
