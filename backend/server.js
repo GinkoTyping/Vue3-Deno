@@ -11,16 +11,16 @@ const router = new Router();
 const app = new Application();
 app.use(oakCors());
 
+// Set routes
 setMemberRoutes(router);
 setLinkRoutes(router);
-
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+// Consoles
 app.addEventListener("error", (evt) => {
   console.log(evt.error);
 });
-
 app.addEventListener("listen", ({ hostname, port, secure }) => {
   console.log(
     `Listening on: ${secure ? "https://" : "http://"}${
@@ -28,4 +28,6 @@ app.addEventListener("listen", ({ hostname, port, secure }) => {
     }:${port}`,
   );
 });
+
+// Start sever
 app.listen({ port: 8000 });

@@ -1,9 +1,17 @@
-import { getAllLink, getLinkById, insertLink, updateLinkLike, updateLinkUserPointsByUserId, updateLinkVisible } from "../model/link.model.js";
+import {
+  getAllLink,
+  getLinkById,
+  insertLink,
+  updateLinkLike,
+  updateLinkUserPointsByUserId,
+  updateLinkVisible,
+} from "../model/link.model.js";
 import { getMemberById, updateMemberPoint } from "../model/member.model.js";
 import { formatDate } from "../util/index.js";
 
+// Add attributes so that in frontend, these information can be displayed easily
 export function mapLinksToFrontend(links) {
-  return links.map(link => ({
+  return links.map((link) => ({
     ...link,
     createdAt: formatDate(new Date(link.createdAt)),
     likes: JSON.parse(link.likes),
@@ -13,17 +21,18 @@ export function mapLinksToFrontend(links) {
   }));
 }
 
+// Parse sorting params from frontend, and then turn it into acceptable params for Model
 async function getSortParams(context) {
   let sortInfo;
-  if (context.request.method === 'GET') {
+  if (context.request.method === "GET") {
     const query = context.request.url.searchParams;
-    const column = query.get('column');
-    const order = JSON.parse(query.get('isDesc')) ? 'DESC' : 'ASC';
+    const column = query.get("column");
+    const order = JSON.parse(query.get("isDesc")) ? "DESC" : "ASC";
     if (column) {
       sortInfo = { column, order };
-    } 
+    }
   } else {
-    const params  = await context.request?.body?.json();
+    const params = await context.request?.body?.json();
     if (params?.sortInfo) {
       sortInfo = params.sortInfo;
     }
@@ -40,11 +49,11 @@ export async function queryAllLinks(context) {
 
 export function queryFavoriteLinks(context) {
   if (isNaN(context.params?.userId)) {
-    throw new Error()
+    throw new Error();
   } else {
     const userId = Number(context.params.userId);
     const links = getAllLink();
-    const output = links.filter(link => {
+    const output = links.filter((link) => {
       const likes = JSON.parse(link.likes);
       return likes.includes(userId);
     });
@@ -53,11 +62,12 @@ export function queryFavoriteLinks(context) {
 }
 
 export async function handleUpdateLinkLike(context) {
-  const { previousStatus, likeStatus, linkId, userId, linkUserId } = await context.request.body.json();
+  const { previousStatus, likeStatus, linkId, userId, linkUserId } =
+    await context.request.body.json();
   if (previousStatus === likeStatus) {
     context.response.status = 400;
     context.response.body = {
-      message: 'Nothing to change.'
+      message: "Nothing to change.",
     };
     return;
   }
@@ -66,23 +76,23 @@ export async function handleUpdateLinkLike(context) {
   if (!link) {
     context.response.status = 401;
     context.response.body = {
-      message: 'Invalid linkId.'
+      message: "Invalid linkId.",
     };
     return;
   }
 
+  // like status of a link affects a user's points and rating of all links
   updateLinkLike({ link, linkId, likeStatus, userId });
   handleUpdateMemberPoints(previousStatus, likeStatus, linkUserId);
   updateLinkUserPointsByUserId(linkUserId);
 
   context.response.body = {
-    message: 'Update succeeded.',
+    message: "Update succeeded.",
     isSuccess: true,
   };
 }
 
 function handleUpdateMemberPoints(previousStatus, newStatus, userId) {
-  
   let changedPoints;
   if (previousStatus === 0) {
     changedPoints = newStatus === 1 ? 2 : 1;
@@ -101,10 +111,11 @@ export async function handleUpdateLinkIsShow(context) {
   const { linkId, userId, isShow } = await context.request.body.json();
   const link = getLinkById(linkId);
 
+  // check permissions
   if (link.userId !== userId) {
     context.response.status = 400;
     context.response.body = {
-      message: 'Not allowed to modify others link.'
+      message: "Not allowed to modify others link.",
     };
     return;
   }
@@ -113,17 +124,19 @@ export async function handleUpdateLinkIsShow(context) {
 
   context.response.body = {
     isSuccess: true,
-    message: 'Switching visibilty succeeded.'
+    message: "Switching visibilty succeeded.",
   };
 }
 
 export async function handlePostLink(context) {
   const { title, desc, userId } = await context.request.body.json();
   const user = getMemberById(userId);
+
+  // validate userId
   if (!user) {
     context.response.status = 400;
     context.response.body = {
-      message: 'Invalid userId.'
+      message: "Invalid userId.",
     };
     return;
   }
@@ -139,6 +152,6 @@ export async function handlePostLink(context) {
 
   context.response.body = {
     isSuccess: true,
-    message: 'Post link succeeded.'
+    message: "Post link succeeded.",
   };
 }
